@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+<head>
+    <title>Questionnaire</title>
+</head>
+
+<body>
+	<div layout:fragment="content" id="app-content">
+	
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="x_panel">
+					<div class="x_title">
+						<h2>Παρακαλώ απαντήστε στις παρακάτω ερωτήσεις</h2>
+						
+            				<h2 style="float: right;  margin-left: 5px;">
+            				<i class="fa fa-graduation-cap"></i>
+            				<span>Όνομα Μαθητή</span>
+            				</h2>
+						
+						<div class="clearfix"></div>
+					</div>
+					<div class="x_content">
+						
+						<div id="wizard" class="form_wizard wizard_horizontal">
+							<ul class="wizard_steps" style="margin: 0px!important; padding:0px!important; margin-bottom: 10px!important;">
+								<li><a href="#step-1"><span class="step_no">1</span><span class="step_descr">Step 1</span></a></li>
+								<li><a href="#step-2" class="disabled"><span class="step_no">2</span><span class="step_descr">Step 2</span></a></li>
+								<li><a href="#step-3" class="disabled"><span class="step_no">3</span><span class="step_descr">Step 3</span></a></li>
+								<li><a href="#step-4" class="disabled"><span class="step_no">4</span><span class="step_descr">Step 4</span></a></li>
+								<li><a href="#step-5" class="disabled"><span class="step_no">5</span><span class="step_descr">Step 5</span></a></li>
+							</ul>
+							
+							<hr />
+							
+							<div class="row">
+								<div class="col-md-12">
+								<h2>
+									<span style="font-weight: bold;">1. </span> Να προτείνεις καλύτερους τρόπους συσκευασίας και συντήρησης των τροφίμων (πχ φρούτων, λαχανικών, κρέατος κ.α.) ώστε να παραμένουν ποιοτικά
+								</h2>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-2"><h5><input type="radio" name="answear_1" value="0" id="value_1_0" /> <label for="value_1_0"> Όχι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_1" value="1" id="value_1_1" /> <label for="value_1_1"> Μάλον Όχι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_1" value="2" id="value_1_2" /> <label for="value_1_2"> Δεν ξέρω </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_1" value="3" id="value_1_3" /> <label for="value_1_3"> Μάλον Ναι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_1" value="4" id="value_1_4" /> <label for="value_1_4"> Ναι </label></h5></div>
+							</div>
+							
+							<hr />
+							
+							<div class="row">
+								<div class="col-md-12">
+								<h2>
+									<span style="font-weight: bold;">2. </span> Να προσπαθείς να ενοπίσεις  και να εξορύσσεις μεταλλεύματα και ορυκτά (πχ κοιτάσματα πετρελαίου, μεταλλεύματα, αέρια, ραδιενεργές πρώτες ύλες
+								</h2>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-2"><h5><input type="radio" name="answear_2" value="0" id="value_2_0" /> <label for="value_2_0"> Όχι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_2" value="1" id="value_2_1" /> <label for="value_2_1"> Μάλον Όχι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_2" value="2" id="value_2_2" /> <label for="value_2_2"> Δεν ξέρω </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_2" value="3" id="value_2_3" /> <label for="value_2_3"> Μάλον Ναι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_2" value="4" id="value_2_4" /> <label for="value_2_4"> Ναι </label></h5></div>
+							</div>
+							
+							<hr />
+							
+							<div class="row">
+								<div class="col-md-12">
+								<h2>
+									<span style="font-weight: bold;">3. </span> Να ελέγχεις σε ένα εργαστήριο εάν κάποια τρόφιμα είναι ασφαλή για κατανάλωση από τους ανθρώπους πχ δεν έχουν υπολείμματα φαρμάκων, παράσι...
+								</h2>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-2"><h5><input type="radio" name="answear_3" value="0" id="value_3_0" /> <label for="value_3_0"> Όχι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_3" value="1" id="value_3_1" /> <label for="value_3_1"> Μάλον Όχι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_3" value="2" id="value_3_2" /> <label for="value_3_2"> Δεν ξέρω </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_3" value="3" id="value_3_3" /> <label for="value_3_3"> Μάλον Ναι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_3" value="4" id="value_3_4" /> <label for="value_3_4"> Ναι </label></h5></div>
+							</div>							
+						
+						
+							<hr />
+							
+							<div class="row">
+								<div class="col-md-12">
+								<h2>
+									<span style="font-weight: bold;">4. </span> Να οργανώσεις μία εκπαιδευτική δραστηριότητα για παιδιά προσχολικής ηλικίας πχ διήγηση ενός παραμυθιού, ζωγραφική, κουκλοθέατρο κλπ
+								</h2>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-2"><h5><input type="radio" name="answear_4" value="0" id="value_4_0" /> <label for="value_4_0"> Όχι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_4" value="1" id="value_4_1" /> <label for="value_4_1"> Μάλον Όχι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_4" value="2" id="value_4_2" /> <label for="value_4_2"> Δεν ξέρω </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_4" value="3" id="value_4_3" /> <label for="value_4_3"> Μάλον Ναι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_4" value="4" id="value_4_4" /> <label for="value_4_4"> Ναι </label></h5></div>
+							</div>
+							
+							<hr />
+							
+							<div class="row">
+								<div class="col-md-12">
+								<h2>
+									<span style="font-weight: bold;">5. </span> Να ελέγχεις την ποιότητα ενός μετάλλου που μπορεί να χρησιμοποιηθεί για την κατασκευή ενός ιατρικού εργαλείου πχ στηθοσκοπίου
+								</h2>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-2"><h5><input type="radio" name="answear_5" value="0" id="value_5_0" /> <label for="value_5_0"> Όχι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_5" value="1" id="value_5_1" /> <label for="value_5_1"> Μάλον Όχι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_5" value="2" id="value_5_2" /> <label for="value_5_2"> Δεν ξέρω </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_5" value="3" id="value_5_3" /> <label for="value_5_3"> Μάλον Ναι </label></h5></div>
+                   				<div class="col-md-2"><h5><input type="radio" name="answear_5" value="4" id="value_5_4" /> <label for="value_5_4"> Ναι </label></h5></div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-2 pull-right">
+									<button type="button" class="btn btn-block btn-primary btn-lg">Αποθήκευση</button>
+								</div>
+								
+								<div class="col-md-2 pull-right">
+									<button type="button" class="btn btn-block btn-warning btn-lg">Προηγούμενο</button>
+								</div>
+							</div>
+						</div>								
+					</div>						
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

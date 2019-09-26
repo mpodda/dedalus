@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="parameter-layout">
+
+<head>
+    <title th:text="#{parameters.hollands.title}"></title>
+</head>
+
+<body>
+    <span layout:fragment="pageTitle" th:text="#{parameters.hollands.title}"></span>
+    <div layout:fragment="parameterTitle" th:text="#{parameters.hollands.title}"></div>
+    <div layout:fragment="parameterContent">
+        <div id="GoesHere">
+            <grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="parameterApp.enablePaging" :pg="parameterApp.pg" :sorting="parameterApp.sorting" :fieldsset="fieldsset" :dataset="parameterApp.dataset" :gridcomponents="gridcomponents" v-if="parameterApp.dataset!=null"></grid>
+            
+			<edit-holland-dialog v-if="parameterApp.isEditDialogVisible" :holland="parameterApp.currentParameter" @onclose="parameterApp.closeEditDialog"></edit-holland-dialog>
+			
+			<info-dialog v-if="parameterApp.isInfoDialogVisible" :message="currentInfoMessage" @onclose="onInfoDialogClose"></info-dialog>
+
+			<yesno-dialog v-if="parameterApp.isYesNoDialogVisible" :confirmationfunc="parameterApp.deleteParameter" :disagreementfunc="parameterApp.denialParameterDeletion" :cancelfunc="parameterApp.denialParameterDeletion"  :message="parameterApp.questionMessage"></yesno-dialog>
+        </div>        
+    </div>
+
+    <span layout:fragment="page-script">
+        <script type="text/javascript" th:src="@{/js/app/parameters/hollands.js}" ></script>
+    </span>
+    
+    <span layout:fragment="after-content">
+	    <script type="text/x-template" id="edit-holland-dialog-template">
+			<edit-generic-parameter-dialog :data="holland" :cancelaction="parameterApp.closeEditDialog" :saveaction="parameterApp.saveParameter">
+				<span style="font-weight:bold;" slot="header"> {{holland.value}}</span>
+
+				<div slot="fields">
+					<div class="form-group">
+						<div class="row">
+							<div><label class="col-lg-2" th:text="#{parameters.value}"></label></div>
+							<div class="col-lg-10"><input type="text"ref="hollandValue" v-model="holland.value" class="form-control" /></div>
+						</div>
+						<div class="row">
+							<div class="col-lg-2"></div>
+							<div class="col-lg-10 errorText" ref="hollandValueError"></div>
+						</div>
+
+					</div>
+
+
+				</div>
+			</edit-generic-parameter-dialog>
+		</script>      
+    </span>
+
+</body>
+
+</html>

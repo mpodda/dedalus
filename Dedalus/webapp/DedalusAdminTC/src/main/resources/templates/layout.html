@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+  <head>
+    <title>Home</title>
+    
+	<meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    
+	<script th:src="@{/layout-templates/AdminLTE-master/plugins/jQuery/jQuery-2.1.4.min.js}"></script>
+  
+	<script th:src="@{/layout-templates/AdminLTE-master/plugins/jQueryUI/jquery-ui.min.js}"></script>
+  
+	<link rel="stylesheet" th:href="@{/layout-templates/AdminLTE-master/bootstrap/css/bootstrap.min.css}">
+  	<link rel="stylesheet" th:href="@{/layout-templates/AdminLTE-master/font-awesome-4.5.0/css/font-awesome.min.css}">
+  	<link rel="stylesheet" th:href="@{/layout-templates/AdminLTE-master/ionicframework/css/ionicons.min.css}">
+  	<link rel="stylesheet" th:href="@{/layout-templates/AdminLTE-master/dist/css/AdminLTE.min.css}">
+  	<link rel="stylesheet" th:href="@{/layout-templates/AdminLTE-master/dist/css/skins/_all-skins.min.css}">
+  	<link rel="stylesheet" th:href="@{/layout-templates/AdminLTE-master/plugins/iCheck/flat/blue.css}">
+  	<link rel="stylesheet" th:href="@{/layout-templates/AdminLTE-master/plugins/morris/morris.css}">
+  	<link rel="stylesheet" th:href="@{/layout-templates/AdminLTE-master/plugins/jvectormap/jquery-jvectormap-1.2.2.css}">
+  	<link rel="stylesheet" th:href="@{/layout-templates/AdminLTE-master/plugins/datepicker/datepicker3.css}">
+  	<link rel="stylesheet" th:href="@{/layout-templates/AdminLTE-master/plugins/daterangepicker/daterangepicker-bs3.css}">
+  	<link rel="stylesheet" th:href="@{/layout-templates/AdminLTE-master/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css}">
+    
+    
+	<script type="text/javascript" th:inline="text">
+		const contextPath = "[[@{/}]]";
+	</script>
+
+    <style type="text/css" th:inline="text">
+		.sortable {
+			cursor: default;
+			background: url([[@{/images/sort_both.png}]]) no-repeat center right;
+		}
+      
+		.sortasc {
+			background: url([[@{/images/sort_asc.png}]]) no-repeat center right;
+		}
+
+		.sortdesc {
+			background: url([[@{/images/sort_desc.png}]]) no-repeat center right;
+		}
+		
+		.selectedRow {
+			background-color: #fcfcfc;
+		}
+		
+		.errorText {
+			color: red!important;
+		}
+		
+  		.blue-tooltip + .tooltip > .tooltip-inner {background-color: #00cdcd;}
+		.red-tooltip + .tooltip > .tooltip-inner {background-color: #cd0000;}
+	
+		.modal-sm {
+			width: 400px;
+		}
+		
+		.bannerBackground {
+			background: url([[@{/images/TuitionCentre4.jpg}]]) center center;
+		}
+		
+		.modal-content {
+			/*width: 160%!important;*/
+			width: 100%!important;
+		}
+		
+		.modal-dialog {
+			/*margin-top: 0px!important;*/
+			/*margin-left: 0px!important;*/
+			margin-left: 10%!important;
+		}
+			
+		hr {
+			margin:12px!important;
+		}
+		
+    </style>
+
+	<script type="text/javascript" th:src="@{/js/vue/2.5.9/vue.min.js}" ></script>
+	<script type="text/javascript" th:src="@{/js/axios/0.18.0/axios.min.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/vue/i18n/vue-i18n.min.js}" ></script>
+
+      
+	<script type="text/javascript" th:src="@{/js/lib/grid.js}" ></script>
+	<script type="text/javascript" th:src="@{/js/lib/validator.js}" ></script>
+	<script type="text/javascript" th:src="@{/js/lib/dialog.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/lib/default.js}" ></script>
+
+   	<script type="text/javascript" th:src="@{/js/lib/ParameterAppClass.js}" ></script>
+   	<script type="text/javascript" th:src="@{/js/lib/EditEligibleEntriesClass.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/lib/SelectEntryClass.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/lib/ViewEntriesClass.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/lib/ParameterComponents.js}" ></script>
+    
+  </head>
+  
+  <body class="hold-transition skin-blue sidebar-mini">
+	<div class="row">
+		<div class="box box-widget widget-user">
+			<div class="widget-user-header bg-black bannerBackground">
+				<h3 class="widget-user-username"> <i class="fa fa-ellipsis-v"></i> <i class="fa fa-ellipsis-v"></i> <span th:text="${currentUser.userFullName}"></span></h3>
+				<h5 class="widget-user-desc"><i class="fa fa-user"></i> <span th:text="${currentUser.userName}"></span></h5>
+
+				<div>
+					<span style="padding: 15px;">
+						<a class="btn btn-primary" th:href="@{/}">Κεντρική
+							<span class="fa fa-reorder"></span>
+		                </a>
+					</span>
+				
+					<span style="padding: 15px;">
+						<a class="btn btn-success" th:href="@{/app/pupils}">Μαθητές
+							<span class="fa fa-mortar-board"></span>
+		                </a>
+					</span>
+					
+					<span style="padding: 15px;">
+						<a class="btn btn-warning" th:href="@{/app/tokens}">Κουπόνια
+							<span class="fa fa-tags"></span>
+		                </a>
+					</span>
+					
+					<div class="pull-right">
+						<a class="btn btn-danger" th:href="@{/logout}">Έξοδος
+			 				<span class="glyphicon glyphicon-log-out"></span>
+			                <span class="glyphicon-class"></span>
+		                </a>
+					</div>
+				</div>
+				
+				
+			</div>
+			<div class="widget-user-image">
+				<span id="app-current-page">
+				<current-page-indicator :templateloader="getTemplate()"></current-page-indicator>
+				</span>
+			</div>
+			
+			<div class="box-footer">
+				<div class="row">
+					<span id="footer-app">
+						
+					</span>
+                </div>				
+			</div>
+		</div>
+	</div>	
+	 
+	
+	<section class="content-header" style="display: none;">
+	     <h1>
+	     </h1>
+	     	     
+	     
+	     <ol class="breadcrumb">
+	     </ol>
+	</section>	
+	
+	
+	
+	<!-- ======================================================== Templates ===================================================== -->
+	
+    <script type="text/x-template" id="current-page-indicator-template">
+    <!-- Current Page Indicators -->
+		<span>
+		<div style="border-radius: 50%; background-color: #fff; padding: 20px;">
+			<div v-bind:is="templateloader"></div>
+		</div>
+		</span>
+	</script>
+
+    <script type="text/x-template" id="current-page-indicator-home-template">
+		<div class="description-block text-blue">
+			<span class="description-text"><span class="fa fa-reorder"></span></span>
+				<h5 class="description-header description-text">Κεντρική</h5>
+		</div>
+	</script>
+	
+    <script type="text/x-template" id="current-page-indicator-pupils-template">
+		<div class="description-block text-green">
+			<span class="description-text"><span class="fa fa-mortar-board"></span></span>
+				<h5 class="description-header description-text">Μαθητές</h5>
+		</div>
+	</script>
+
+	<script type="text/x-template" id="current-page-indicator-tokens-template">
+		<div class="description-block text-orange">
+			<span class="description-text"><span class="fa fa-tags"></span></span>
+			<h5 class="description-header description-text">Κουπόνια</h5>
+		</div>
+	</script>
+
+    <!-- / Current Page Indicators -->
+    
+	<!-- Grid -->
+	<script type="text/x-template" id="grid-row-template">
+        <tr v-on:click="onClick">
+            <td v-for="(col, index) in row" v-bind:is="getTemplate(index)" :value="col" :data="rawdata"></td>
+        </tr>
+	</script>
+
+	<script type="text/x-template" id="paginator-template">
+        <table style="padding-top:10px; border-spacing: 10px;">
+            <tr class="paginator">
+                <td><button class="btn btn-block btn-success" @click="gotoFirstPage"><i class="fa fa-fast-backward"/></button></td>
+                <td><button class="btn btn-block btn-success" @click="gotoPreviousPage"><i class="fa fa-backward"/></button></td>
+                <td class="lead">Σελίδα {{currentpage}} από {{pages}}</td>
+                <td><button class="btn btn-block btn-success" @click="gotoNextPage"><i class="fa fa-forward"/></button></td>
+                <td><button class="btn btn-block btn-success" @click="gotoLastPage"><i class="fa fa-fast-forward"/></button></td>
+                <td class="lead">Σύνολο εγγραφών: <span v-model="totalrecordscount">{{totalrecordscount}}</span></td>
+            </tr>
+        </table>
+	</script>
+
+	<script type="text/x-template" id="grid-template">
+		<span>
+			<div class="form-group">
+				<div class="top_search col-md-3">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Αναζήτηση..." v-model="filter"/>
+						<span class="input-group-btn">
+		                   			<button class="btn btn-default" type="button">&nbsp;</button>
+		                 		</span>
+					</div>
+				</div>
+				
+				<div class="pull-right">
+					<slot name="commands">
+					</slot>
+				</div>
+
+				<div>
+					<slot name="commands-left">
+					</slot>
+				</div>
+				
+			</div>
+		
+            <table class="table table-hover">
+                <thead><tr><th v-for="(field, index) in fieldsset" @click="sort(field)" v-bind:class="getSortClass(field)">{{field.title}}</th></tr></thead>
+                <tbody v-for="(row, index) in rows">
+                    <grid-row :rawdata="row" @onselectRow="onselectRowListener"></grid-row>
+                </tbody>
+            </table>
+			<paginator v-if="pagingenabled" :me="pg" :currentPage="pg.currentpage" :totalRecordsCount="pg.totalrecordscount" :Pages="pg.pages" :recordsPerPage="pg.recordsPerPage"></paginator>
+		</span>
+	</script>
+
+	<script type="text/x-template" id="default-template">
+		<td>{{value}}</td>
+	</script>
+    <!-- / Grid -->
+    
+    <!-- Create / Edit / Delete Command Templates -->
+	<script type="text/x-template" id="edit-parameter-component-template">
+		<td class="col-md-1">
+			<button class="btn btn-primary" @click="onEditParameter"><i class="fa fa-edit"></i></button>
+		</td>
+	</script>
+
+	<script type="text/x-template" id="delete-parameter-component-template">
+		<td class="col-md-1">
+			<button class="btn btn-danger" @click="onDeleteParameter"><i class="fa fa-close"></i></button>
+		</td>
+	</script>
+    <!-- Create / Edit / Delete Command Templates -->
+    
+    
+    <!-- General Dialogs -->
+	<script type="text/x-template" id="yesno-dialog-template">
+		<div class="modal show">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" @click="cancelfunc()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title"><i class="fa fa-question-circle" /> {{message.title}}</h4>
+					</div>
+
+					<div class="modal-body">
+						{{message.text}}
+					</div>
+							
+					<div class="modal-footer" style="text-align:center; border red 1px solid">
+						<button type="button" class="btn btn-primary" @click="confirmationfunc()">[[#{global.yes}]]</button>
+                        <button type="button" class="btn btn-warning" @click="disagreementfunc()">[[#{global.no}]]</button>
+						<button type="button" class="btn btn-default pull-right" @click="cancelfunc()">[[#{global.cancel}]]</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
+	
+	<script type="text/x-template" id="edit-generic-dialog-template">
+		<div class="modal show">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" @click="cancel" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">
+							<slot name="header"></slot>
+						</h4>
+					</div>
+					<div class="modal-body">
+						<slot name="data"></slot>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary pull-left" @click="save"><i class="fa fa-check"></i></button>
+               			<button type="button" class="btn btn-default" @click="cancel"><i class="fa fa-sign-out"></i></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
+	
+			<script type="text/x-template" id="edit-generic-parameter-dialog-template">
+				<div class="modal show">
+					<div class="modal-dialog">
+	            		<div class="modal-content">
+		              		<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" @click="cancel" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			                	<h4 class="modal-title">
+									<span v-if="data.id==null && !viewonly"><i class="fa fa-plus" /> Νέα εγγραφή</span> 
+									<span v-if="data.id!=null && !viewonly"><i class="fa fa-edit" /> Επεξεργασία εγγραφής </span> 
+									<slot name="header"></slot>
+								</h4>
+							</div>
+							<div class="modal-body">
+								<slot name="fields"></slot>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary pull-left" @click="save" v-if="viewonly==false"><i class="fa fa-check"></i></button>
+	                			<button type="button" class="btn btn-default" @click="cancel"><i class="fa fa-sign-out"></i></button>
+	              			</div>
+	            		</div>
+					</div>
+	        	</div>
+			</script>
+	
+    
+<!-- ======================================================== / Templates ===================================================== -->
+            	
+	<section class="content">
+    	<span layout:fragment="content">
+      	Page content
+    	</span>
+	</section>
+		
+
+<script type="text/javascript">
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+
+<script th:src="@{/layout-templates/AdminLTE-master/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/raphael/raphael-min.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/morris/morris.min.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/sparkline/jquery.sparkline.min.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/knob/jquery.knob.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/moment.js/moment.min.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/daterangepicker/daterangepicker.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/datepicker/bootstrap-datepicker.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/slimScroll/jquery.slimscroll.min.js}"></script>
+<script th:src="@{/layout-templates/AdminLTE-master/plugins/fastclick/fastclick.js}"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+</script>		
+
+<script type="text/javascript" th:src="@{/js/app/layout.js}" ></script>
+	
+<span layout:fragment="after-content"></span>
+<span layout:fragment="page-script"></span>
+	
+  </body>
+</html>

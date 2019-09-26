@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="parameter-layout">
+
+<head>
+    <title>Locations</title>
+</head>
+
+<body>
+    <span layout:fragment="pageTitle">Locations</span>
+    <div layout:fragment="parameterTitle" th:text="#{parameters.locations.title}"></div>
+    <div layout:fragment="parameterContent">
+        <div id="GoesHere">
+            <grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="parameterApp.enablePaging" :pg="parameterApp.pg" :sorting="parameterApp.sorting" :fieldsset="fieldsset" :dataset="parameterApp.dataset" :gridcomponents="gridcomponents" v-if="parameterApp.dataset!=null"></grid>
+            
+			<edit-location-dialog v-if="parameterApp.isEditDialogVisible" :location="parameterApp.currentParameter" @onclose="parameterApp.closeEditDialog"></edit-location-dialog>
+			
+			<info-dialog v-if="parameterApp.isInfoDialogVisible" :message="currentInfoMessage" @onclose="onInfoDialogClose"></info-dialog>
+
+			<yesno-dialog v-if="parameterApp.isYesNoDialogVisible" :confirmationfunc="parameterApp.deleteParameter" :disagreementfunc="parameterApp.denialParameterDeletion" :cancelfunc="parameterApp.denialParameterDeletion"  :message="parameterApp.questionMessage"></yesno-dialog>
+        </div>        
+    </div>
+
+    <span layout:fragment="page-script">
+        <script type="text/javascript" th:src="@{/js/app/parameters/locations.js}" ></script>
+    </span>
+    
+    <span layout:fragment="after-content">
+	    <script type="text/x-template" id="edit-location-dialog-template">
+			<edit-generic-parameter-dialog :data="location" :cancelaction="parameterApp.closeEditDialog" :saveaction="parameterApp.saveParameter">
+				<span style="font-weight:bold;" slot="header"> {{location.description}}</span>
+
+				<div class="form-group" slot="fields">
+					<div class="row">
+						<div><label class="control-label col-lg-2">Περιγραφή</label></div>
+						<div class="col-lg-10"><input type="text" v-model="location.description" class="form-control" /></div>
+					</div>
+				
+				</div>
+			</edit-generic-parameter-dialog>
+		</script>      
+    </span>
+
+</body>
+
+</html>

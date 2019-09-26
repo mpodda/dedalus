@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+<head>
+    <title>Home</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+    	<div id="homeApp">
+	    	<div class="row">
+	    		
+	    		<!-- Available -->
+	    		<div class="col-md-5">
+					<div class="info-box bg-aqua">
+						<span class="info-box-icon"><i class="fa fa-tags"></i></span>
+						<token-status :avt="available" v-if="available != null"></token-status>
+					</div>
+				</div>
+				<!-- / Available -->
+				
+	    		<!-- Not Started -->
+	    		<div class="col-md-5">
+					<div class="info-box bg-green">
+			            <span class="info-box-icon"><i class="fa fa-tags"></i></span>
+			
+						<token-status :avt="notStarted" v-if="notStarted != null"></token-status>			            
+					</div>
+				</div>
+				<!-- / Not Started -->			
+			</div>
+			
+			
+			<div class="row">
+	    		<!-- On Going -->
+	    		<div class="col-md-5">
+					<div class="info-box bg-yellow">
+			            <span class="info-box-icon"><i class="fa fa-tags"></i></span>
+			
+						<token-status :avt="onGoing" v-if="onGoing != null"></token-status>
+					</div>
+				</div>
+				<!-- / On Going -->
+	
+	    		<!-- Completed -->
+	    		<div class="col-md-5">
+					<div class="info-box bg-red">
+			            <span class="info-box-icon"><i class="fa fa-tags"></i></span>
+			
+						<token-status :avt="completed" v-if="completed != null"></token-status>
+					</div>
+				</div>
+				<!-- / Completed -->
+			
+			</div>
+		</div>
+    </div>
+	
+    <span layout:fragment="page-script">
+        <script type="text/javascript" th:src="@{/js/app/home.js}" ></script>
+    </span>
+	
+	<span layout:fragment="after-content">
+	    <script type="text/x-template" id="token-status-template">
+			<span>
+				{{renderMessages()}}
+				<div class="info-box-content">
+					<span class="info-box-text">{{text}}</span>
+					<span class="info-box-number">{{avt.availableTokens}} / {{avt.totalTokens}}</span>
+			
+					<div class="progress">
+						<div class="progress-bar" v-bind:style="`width: ${avt.percentage}%`"></div>
+					</div>	
+					<span class="progress-description">{{avt.percentage}}% {{description}}</span>
+				</div>
+			</span>
+		</script>
+	</span>
+</body>
+
+</html>

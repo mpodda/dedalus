@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title th:text="#{login.login}"></title>
+
+    <link th:href="@{/layout-templates/gentella/login/bootstrap.css}" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/layout-templates/gentella/fonts/css/font-awesome.min.css}" />
+    <link th:href="@{/layout-templates/gentella/login/nprogress.css}" rel="stylesheet">
+    <link th:href="@{/layout-templates/gentella/login/animate.css}" rel="stylesheet">
+    <link th:href="@{/layout-templates/gentella/login/custom.css}" rel="stylesheet">
+    
+  </head>
+
+  <body class="login">
+	<div>
+		<a class="hiddenanchor" id="signup"></a>
+		<a class="hiddenanchor" id="signin"></a>
+
+		
+		<div class="login_wrapper">
+		
+		<!-- =============== Login =============== -->
+		<div class="animate form login_form">
+			<section class="login_content">
+				<form th:action="@{/login.html}" method="post">
+				
+					<h1 th:text="#{login.entrance}"></h1>
+              	
+              		<div th:if="${loginError}" class="alert alert-danger" th:text="#{login.wrongUserOrPassword}"> </div>
+              
+					<div class="col-md-12 col-sm-6 col-xs-12 form-group">
+						<input type="text" class="form-control has-feedback-left" name="username"   th:placeholder="#{login.placeHolder.userName}">
+						<span style="color: #1479b8;" class="fa fa-user form-control-feedback left"></span>
+                    </div>
+                                    
+					<div class="col-md-12 col-sm-6 col-xs-12 form-group">
+                        <input type="password" class="form-control has-feedback-left" name="password"  th:placeholder="#{login.placeHolder.password}">
+                        <span style="color: #1479b8;" class="fa fa-key form-control-feedback left"></span>
+                    </div>
+              
+					<div>
+                		<button style="font-weight: bold; font-size: 20px; color:#7387a9;" class="btn btn-default submit"><span th:text="#{login.entrance}"></span> <i style="color: #1479b8;" class="fa fa-sign-in"></i> </button>
+                		
+                		<!--  Hidden (future use)  -->
+                		<a class="reset_pass" href="#"  style="display: none;">Lost your password?</a>
+                		<!--  / Hidden (future use)  -->
+              		</div>
+
+              		<div class="clearfix"></div>
+					
+					<!--  Hidden (future use)  -->
+					<div class="separator">
+						<p class="change_link" style="display: none;">New to site?
+							<a href="#signup" class="to_register"> Create Account </a>
+						</p>
+		
+		                <div class="clearfix"></div>
+		                <br>
+						<!--  / Hidden (future use)  -->
+						
+		                <div>
+							<h1><i style="font-size: 35px;" class="fa fa-compass"></i> Dedalus</h1>
+							<h2 th:text="#{login.h2}"></h2>
+		                  
+							<p>©2018 All Rights Reserved. </p>
+		                </div>
+					</div>
+              
+            </form>
+          </section>
+        </div>
+        <!-- ===============/  Login =============== -->
+
+		 
+		<!-- =============== Registration (Future use)=============== -->
+        <div id="register" class="animate form registration_form">
+          <section class="login_content">
+            <form>
+              <h1>Create Account</h1>
+              <div>
+                <input class="form-control" placeholder="Username" required="" type="text">
+              </div>
+              <div>
+                <input class="form-control" placeholder="Email" required="" type="email">
+              </div>
+              <div>
+                <input class="form-control" placeholder="Password" required="" type="password">
+              </div>
+              <div>
+                <a class="btn btn-default submit" href="https://colorlib.com/polygon/gentelella/index.html">Submit</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <p class="change_link">Already a member ?
+                  <a href="#signin" class="to_register"> Log in </a>
+                </p>
+
+                <div class="clearfix"></div>
+                <br>
+
+                <div>
+                  <h1><i class="fa fa-paw"></i> Dedalus!</h1>
+                  <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+        <!-- =============== / Registration =============== -->
+        
+      </div>
+    </div>
+  
+
+</body></html>

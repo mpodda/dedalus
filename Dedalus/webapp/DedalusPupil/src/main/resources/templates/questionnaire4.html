@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+<head>
+    <title>Questionnaire</title>
+</head>
+
+<body>
+	<div layout:fragment="content" id="app-content">
+	
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="x_panel">
+					<div class="x_title">
+						<h2>Παρακαλώ απαντήστε στις παρακάτω ερωτήσεις</h2>
+						
+            				<h2 style="float: right;  margin-left: 5px;">
+            				<i class="fa fa-graduation-cap"></i>
+            				<span id="pupilName"></span>
+            				</h2>
+						
+						<div class="clearfix"></div>
+					</div>
+					<div class="x_content">
+						
+						<div id="wizard" class="form_wizard wizard_horizontal">
+							<ul id="stepsPlaceHolder" class="wizard_steps" style="margin: 0px!important; padding:0px!important; margin-bottom: 10px!important;">
+	
+							</ul>
+							
+							<div id="questionsPlaceHolder">
+							</div>
+							
+							<div class="row">
+								<div class="col-md-2 pull-right">
+									<button type="button" class="btn btn-block btn-primary btn-lg" id="btnSaveQuestions">Αποθήκευση</button>
+								</div>
+								
+								<div class="col-md-2 pull-right">
+									<button type="button" class="btn btn-block btn-warning btn-lg" id="btnPreviousQuestions">Προηγούμενο</button>
+								</div>
+							</div>
+						</div>								
+					</div>						
+				</div>
+			</div>
+		</div>
+		
+		<script th:src="@{/js/app/questionnaire.js}" type="text/javascript"></script>
+		
+	</div>
+	
+</body>
+</html>

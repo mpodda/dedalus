@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+<head>
+    <title>Questionnaire</title>
+</head>
+
+<body>
+	<div layout:fragment="content" id="app-content">
+	
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="x_panel">
+					<div class="x_title">
+						<h2>Αποτελέσματα</h2>
+						
+						<div class="clearfix"></div>
+					</div>
+					<div class="x_content">
+						
+						<!-- Holland -->
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<div class="x_panel tile fixed_height_350">
+	                        		<div class="clearfix"></div>
+	                        		<div id="hollandPlaceHolder"></div>
+	                        	</div>
+	                        </div>
+						</div>
+						<!-- / Holland -->
+						
+						<!-- Holland (Analytical) -->
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<div class="x_panel tile fixed_height_350">
+		                            <div class="x_title">
+		                                <h2>Κατηγορίες Holland</h2>
+										<ul class="nav navbar-right panel_toolbox">
+											<li><a href="#"></a></li>
+											<li><a href="#"></a></li>
+											<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+										</ul>
+		                                <div class="clearfix"></div>
+		                            </div>
+		                            
+		                            <div class="x_content">
+		                            	<h4>Ανάλυση ανά κατηγορία</h4>
+		                            	
+		                            	<div id="hollandAnalyticalPlaceHolder"></div>
+		                            </div>
+									
+								</div>
+							</div>
+						</div>
+						<!-- / Holland (Analytical) -->
+						
+						<!--  Top 4 Categories -->
+						<div class="row" id="topCategoriesForChartPlaceHolder">
+							
+						</div>
+						<!--  / Top 4 Categories -->
+						
+						<!--  Top 30 Categories -->
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<div class="x_panel">
+									<div class="x_title">
+										<h2>Οι Top 30 κατηγορίες <small>αναλυτικά</small></h2>
+										<ul class="nav navbar-right panel_toolbox">
+											<li><a href="#"></a></li>
+											<li><a href="#"></a></li>
+											<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+										</ul>
+
+										<div class="clearfix"></div>
+									</div>
+                                  
+									<div class="x_content">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>Κατηγορία</th>
+													<th>Ποσοστό %</th>
+												</tr>
+											</thead>
+										
+											<tbody id="topCategoriesForListPlaceHolder">
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--  / Top 30 Categories -->
+						
+						<!--  Scientific Fields -->
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<div class="x_panel">
+									<div class="x_title">
+										<h2>Επιστημονικά πεδία <small>αναλυτικά</small></h2>
+										<ul class="nav navbar-right panel_toolbox">
+											<li><a href="#"></a></li>
+											<li><a href="#"></a></li>
+											<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+										</ul>
+
+										<div class="clearfix"></div>
+									</div>
+                                  
+									<div class="x_content">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>Πεδίο</th>
+													<th>Ποσοστό %</th>
+												</tr>
+											</thead>
+										
+											<tbody id="scientificFieldsPlaceHolder">
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--  / Scientific Fields -->						
+					</div>						
+				</div>
+			</div>
+
+			
+		</div>
+	</div>
+	
+	<div layout:fragment="pageScript">
+		<script th:src="@{/layout-templates/layout-1/js/jquery/easypie/jquery.easypiechart.min.js}" type="text/javascript"></script>
+		
+		<script th:src="@{/js/app/results.js}" type="text/javascript"></script>
+	</div>
+	
+	
+</body>
+</html>

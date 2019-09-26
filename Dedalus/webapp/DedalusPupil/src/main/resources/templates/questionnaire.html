@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+<head>
+    <title>Questionnaire</title>
+</head>
+
+<body>
+	<div layout:fragment="content" id="app-content">
+	
+		<!-- Questionnaire Form -->
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="x_panel">
+					<div class="x_title">
+						<h2>Παρακαλώ απαντήστε στις παρακάτω ερωτήσεις</h2>
+						<div class="clearfix"></div>
+					</div>
+					<div class="x_content">
+					
+					<form class="form-horizontal form-label-left" id="questionsPlaceHolder">	
+					<div class="form-group" id="questionTemplate">
+						<div class="row">
+							<label class="control-label col-md-6 col-sm-6 col-xs-12" id="question.description">Σου αρέσει αυτό</label>
+							<div class="col-md-3 col-sm-3 col-xs-12">
+							    <div class="btn-group" id="isYes">
+							    	<input type="radio" name="ansawear_0" value="1" /> Ναι
+							    	<input type="radio" name="ansawear_0" value="0" /> Όχι
+							    </div>
+							</div>
+						</div>
+					</div>
+						
+					<div class="form-group" id="questionTemplate">
+						<div class="row">
+							<label class="control-label col-md-6 col-sm-6 col-xs-12" id="question.description">Σου αρέσει εκείνο</label>
+							<div class="col-md-1 col-sm-1 col-xs-2">
+							    <div class="btn-group" id="isYes">
+							    	<input type="radio" name="ansawear_1" value="1" /> Ναι
+							    	<input type="radio" name="ansawear_1" value="0" /> Όχι
+							    </div>
+							</div>
+						</div>
+					</div>
+					</form>	
+						
+						<!-- Wizard -->
+						<div id="wizard" class="form_wizard wizard_horizontal">
+							<ul class="wizard_steps" id="wizard_steps_placeHolder">
+								<li><a href=""><span class="step_no">1</span><span class="step_descr">Βήμα 1</span></a></li>
+								<li><a href="" class="disabled"><span class="step_no">2</span><span class="step_descr">Βήμα 2</span></a></li>
+								<li><a href="#step-3"><span class="step_no">3</span><span class="step_descr">Βήμα 3</span></a></li>
+								<li><a href="#step-4"><span class="step_no">4</span><span class="step_descr">Βήμα 4</span></a></li>
+								<li><a href="#step-5"><span class="step_no">5</span><span class="step_descr">Βήμα 5</span></a></li>
+							
+							</ul>
+							
+							<div class="actionBar"><a href="#" class="btn btn-success">Αποθήκευση απαντήσεων κι επόμενο βήμα</a></div>
+						</div>
+						<!-- / Wizard -->
+						
+						
+					</div>
+				</div>
+			</div>
+	
+		</div>
+		<!-- /Questionnaire Form -->
+		   		
+	</div>
+</body>
+</html>

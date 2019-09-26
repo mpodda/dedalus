@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="parameter-layout">
+
+<head>
+    <title th:text="#{parameters.questions.title}"></title>
+    
+    <style type="text/css" th:inline="text">
+		.questionnaire {
+			background: url([[@{/images/questionnaire.png}]]) no-repeat center right;
+		}
+		
+		.modal-content {
+			/*width: 160%!important;*/
+			width: 160%!important;
+		}
+		
+		.modal-dialog {
+			margin-top: 0px!important;
+			/*margin-left: 0px!important;*/
+			margin-left: 10%!important;
+		}
+			
+		hr {
+			margin:12px!important;
+		}
+    </style>    
+</head>
+
+<body>
+    <span layout:fragment="pageTitle" th:text="#{parameters.questions.title}"></span>
+    <div layout:fragment="parameterTitle" th:text="#{parameters.questions.title}"></div>
+    <div layout:fragment="parameterContent">
+        <div id="app-content">
+            <grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="parameterApp.enablePaging" :pg="parameterApp.pg" :sorting="parameterApp.sorting" :fieldsset="fieldsset" :dataset="parameterApp.dataset" :gridcomponents="gridcomponents" v-if="parameterApp.dataset!=null"></grid>
+            
+			<edit-question-dialog v-if="parameterApp.isEditDialogVisible" :hollands="hollands" :scientificfields="scientificFields" :question="parameterApp.currentParameter" @onclose="parameterApp.closeEditDialog"></edit-question-dialog>
+			
+			<view-question-dialog v-if="viewParameterApp.isEditDialogVisible" :question="parameterApp.currentParameter" @onclose="viewParameterApp.closeEditDialog"></view-question-dialog>
+			
+			<edit-question-questionnaires-dialog v-if="editQuestionQuestionnairesApp.isEditEntriesVisible" :questionnaires="editQuestionQuestionnairesApp.entries"></edit-question-questionnaires-dialog>
+			
+			<edit-question-same-questions-dialog v-if="editQuestionSameQuestionsApp.isEditEntriesVisible" :questions="editQuestionSameQuestionsApp.entries"></edit-question-same-questions-dialog>
+			
+			<edit-question-faculties-dialog v-if="editQuestionFacultiesApp.isEditEntriesVisible" :faculties="editQuestionFacultiesApp.entries"></edit-question-faculties-dialog>
+			
+			<select-question-eligible-questionnaires-dialog v-if="editQuestionQuestionnairesApp.isSelectEligibleEntriesVisible" :questionnaires="editQuestionQuestionnairesApp.eligibleEntries"></select-question-eligible-questionnaires-dialog>
+			
+			<select-question-eligible-same-questions-dialog v-if="editQuestionSameQuestionsApp.isSelectEligibleEntriesVisible" :questions="editQuestionSameQuestionsApp.eligibleEntries"></select-question-eligible-same-questions-dialog>
+			
+			<select-question-eligible-faculties-dialog v-if="editQuestionFacultiesApp.isSelectEligibleEntriesVisible" :questions="editQuestionFacultiesApp.eligibleEntries"></select-question-eligible-faculties-dialog>
+			
+			<select-question-category-dialog v-if="editQuestionCategoryApp.isSelectEntryVisible" :categories="editQuestionCategoryApp.eligibleEntries" :saveaction="editQuestionCategoryApp.closeSelectEntryDialog" :cancelaction="editQuestionCategoryApp.closeSelectEntryDialog" :fieldsset="editQuestionCategoryApp.fieldsset" :pg="editQuestionCategoryApp.pg" :selectentry="editQuestionCategoryApp.selectEntry"></select-question-category-dialog>
+			
+			<select-question-category-dialog v-if="editQuestionCategory2App.isSelectEntryVisible" :categories="editQuestionCategory2App.eligibleEntries" :saveaction="editQuestionCategory2App.closeSelectEntryDialog" :cancelaction="editQuestionCategory2App.closeSelectEntryDialog" :fieldsset="editQuestionCategory2App.fieldsset" :pg="editQuestionCategory2App.pg" :selectentry="editQuestionCategory2App.selectEntry"></select-question-category-dialog>
+			
+			<select-question-category-dialog v-if="editQuestionSubCategoryApp.isSelectEntryVisible" :categories="editQuestionSubCategoryApp.eligibleEntries" :saveaction="editQuestionSubCategoryApp.closeSelectEntryDialog" :cancelaction="editQuestionSubCategoryApp.closeSelectEntryDialog" :fieldsset="editQuestionSubCategoryApp.fieldsset" :pg="editQuestionSubCategoryApp.pg" :selectentry="editQuestionSubCategoryApp.selectEntry"></select-question-category-dialog>
+			
+			<info-dialog v-if="parameterApp.isInfoDialogVisible" :message="currentInfoMessage" @onclose="onInfoDialogClose"></info-dialog>
+
+			<yesno-dialog v-if="parameterApp.isYesNoDialogVisible" :confirmationfunc="parameterApp.deleteParameter" :disagreementfunc="parameterApp.denialParameterDeletion" :cancelfunc="parameterApp.denialParameterDeletion"  :message="parameterApp.questionMessage"></yesno-dialog>
+        </div>        
+    </div>
+
+    <span layout:fragment="page-script">
+        <script type="text/javascript" th:src="@{/js/app/parameters/questions.js}" ></script>
+    </span>
+    
+    <span layout:fragment="after-content">
+    
+    	<!-- Edit question dialog -->
+	    <script type="text/x-template" id="edit-question-dialog-template">
+			<edit-generic-parameter-dialog :data="question" :cancelaction="parameterApp.closeEditDialog" :saveaction="parameterApp.saveParameter">
+				<span style="font-weight:bold;" slot="header"> <span th:text="#{parameters.questions.question}"></span> <span style="display:none;"> {{question.number}} </span> </span>
+
+				<div class="form-group" slot="fields">
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.description}"></label></div>
+							<div class="col-xs-9"><textarea rows="2" type="text" ref="description" v-model="question.description" class="form-control" /></div>
+
+							<div class="col-xs-1" style="display:none;"><label class="control-label" th:text="#{parameters.number}"></label></div>
+							<div class="col-xs-1" style="display:none;"><input type="text" v-model="question.number" class="form-control" /></div>
+						</div>
+
+						<div class="row">
+							<div class="col-xs-1"></div>
+							<div class="col-xs-9 errorText" ref="descriptionError"></div>
+						</div>
+					</div>
+
+					<hr />
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-1"><label class="control-label" th:text="#{parameters.questions.category}"></label></div>
+							<div class="col-md-8"><div class="form-control" ref="category"><span v-if="question.category != null">{{question.category.description}}</span></div></div>
+							<div class="col-md-1"><button class="btn btn-primary" @click="editQuestionCategoryApp.showEntries(question)"><i class="fa fa-edit"></i></button></div>
+							<div class="col-md-1"><button class="btn btn-danger" @click="editQuestionCategoryApp.removeEntry"><i class="fa fa-close"></i></button></div>
+						</div>
+						<div class="row">
+							<div class="col-md-1"></div>
+							<div class="col-md-8 errorText" ref="categoryError"></div>
+						</div>
+
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.category2}"></label></div>
+							<div class="col-xs-8"><div class="form-control"><span v-if="question.category2 != null">{{question.category2.description}}</span></div></div>
+							<div class="col-xs-1"><button class="btn btn-primary" @click="editQuestionCategory2App.showEntries(question)"><i class="fa fa-edit"></i></button></div>
+							<div class="col-md-1"><button class="btn btn-danger" @click="editQuestionCategory2App.removeEntry"><i class="fa fa-close"></i></button></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.subcategory}"></label></div>
+							<div class="col-xs-8"><div class="form-control"><span v-if="question.subCategory != null">{{question.subcategory.description}}</span></div></div>
+							<div class="col-xs-1"><button class="btn btn-primary" @click="editQuestionSubCategoryApp.showEntries(question)"><i class="fa fa-edit"></i></button></div>
+							<div class="col-md-1"><button class="btn btn-danger" @click="editQuestionSubCategoryApp.removeEntry"><i class="fa fa-close"></i></button></div>
+						</div>
+					</div>
+
+					<hr />
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.holland1}"></label></div>
+							<div class="col-xs-3">
+								<select class="form-control" v-model="question.holland1"><option v-for="holland in hollands" v-bind:value="holland">{{holland.value}}</option></select>
+							</div>
+
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.holland2}"></label></div>
+							<div class="col-xs-3">
+								<select class="form-control" v-model="question.holland2"><option v-for="holland in hollands" v-bind:value="holland">{{holland.value}}</option></select>
+							</div>
+						</div>
+					</div>
+
+					<hr />
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.scientificField1}"></label></div>
+							<div class="col-xs-5">
+								<select class="form-control" ref="scientificField1" v-model="question.scientificField1"><option v-for="sf in scientificfields" v-bind:value="sf">{{sf.description}}</option></select>
+							</div>
+
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.scientificField2}"></label></div>
+							<div class="col-xs-5">
+								<select class="form-control" v-model="question.scientificField2"><option v-for="sf in scientificfields" v-bind:value="sf">{{sf.description}}</option></select>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-1"></div>
+							<div class="col-md-5 errorText" ref="scientificField1Error"></div>
+						</div>
+
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.scientificField3}"></label></div>
+							<div class="col-xs-5">
+								<select class="form-control" v-model="question.scientificField3"><option v-for="sf in scientificfields" v-bind:value="sf">{{sf.description}}</option></select>
+							</div>
+
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.scientificField4}"></label></div>
+							<div class="col-xs-5">
+								<select class="form-control" v-model="question.scientificField4"><option v-for="sf in scientificfields" v-bind:value="sf">{{sf.description}}</option></select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</edit-generic-parameter-dialog>
+		</script>
+		<!-- / Edit question dialog -->
+
+		<!-- View question dialog -->
+	    <script type="text/x-template" id="view-question-dialog-template">
+			<edit-generic-parameter-dialog :viewonly="true" :data="question" :cancelaction="viewParameterApp.closeEditDialog" :saveaction="viewParameterApp.saveParameter">
+				<span style="font-weight:bold;" slot="header"> <span th:text="#{parameters.questions.question}"></span> <span style="display:none;"> {{question.number}} </span> </span>
+
+				<div class="form-group" slot="fields">
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.description}"></label></div>
+							<div class="col-xs-9">{{question.description}}</div>
+
+							<div class="col-xs-1" style="display:none;"><label class="control-label" th:text="#{parameters.number}"></label></div>
+							<div class="col-xs-1" style="display:none;">{{question.number}}</div>
+
+						</div>
+					</div>
+
+					<hr />
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-1"><label class="control-label" th:text="#{parameters.questions.category}"></label></div>
+							<div class="col-md-8"><span v-if="question.category != null">{{question.category.description}}</span></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.category2}"></label></div>
+							<div class="col-xs-8"><span v-if="question.category2 != null">{{question.category2.description}}</span></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.subcategory}"></label></div>
+							<div class="col-xs-8"><span v-if="question.subCategory != null">{{question.subcategory.description}}</span></div>
+						</div>
+					</div>
+
+					<hr />
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.holland1}"></label></div>
+							<div class="col-xs-5"><span v-if="question.holland1 != null">{{question.holland1.value}}</span></div>
+
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.holland2}"></label></div>
+							<div class="col-xs-1"><span v-if="question.holland2 != null">{{question.holland2.value}}</span></div>
+						</div>
+					</div>
+
+					<hr />
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.scientificField1}"></label></div>
+							<div class="col-xs-5"><span v-if="question.scientificField1 != null">{{question.scientificField1.description}}</span></div>
+
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.scientificField2}"></label></div>
+							<div class="col-xs-5"><span v-if="question.scientificField2 != null">{{question.scientificField2.description}}</span></div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.scientificField3}"></label></div>
+							<div class="col-xs-5"><span v-if="question.scientificField3 != null">{{question.scientificField3.description}}</span></div>
+
+							<div class="col-xs-1"><label class="control-label" th:text="#{parameters.questions.scientificField4}"></label></div>
+							<div class="col-xs-5"><span v-if="question.scientificField4 != null">{{question.scientificField4.description}}</span></div>
+						</div>
+					</div>
+				</div>
+			</edit-generic-parameter-dialog>
+		</script>
+		<!-- / View question dialog -->
+
+		<!-- View question details button -->
+        <script type="text/x-template" id="question-details-template">
+            <td class="col-md-1">
+				<button class="btn btn-success" @click="onViewDetails"><i class="fa fa-ellipsis-h"></i></button>
+			</td>
+        </script>
+        <!-- / View question details button -->
+		
+		<!-- Edit question questionnaire button -->
+        <script type="text/x-template" id="question-questionnaire-template">
+            <td class="col-md-1">
+				<button class="btn btn-warning" @click="onEdit"><i class="fa fa-check-square-o" style="font-size:20px;"></i></button>
+			</td>
+        </script>
+		<!-- / Edit question questionnaire button -->
+
+		<!-- Edit question's same questions button -->
+        <script type="text/x-template" id="question-same-questions-template">
+            <td class="col-md-1">
+				<button class="btn btn-warning" @click="onEdit"><i class="fa fa-question-circle" style="font-size:20px;"></i></button>
+			</td>
+        </script>
+        <!-- / Edit question's same questions button -->
+
+		<!-- Edit question's faculties button -->
+        <script type="text/x-template" id="question-faculties-template">
+            <td class="col-md-1">
+				<button class="btn btn-warning" @click="onEdit"><i class="fa fa-graduation-cap"></i></button>
+			</td>
+        </script>
+		<!-- / Edit question's faculties button -->
+
+		<!-- Question categories select dialog -->
+		<script type="text/x-template" id="select-question-category-dialog-template">
+			<edit-generic-dialog :data="categories" :cancelaction="cancelaction" :saveaction="saveaction" :fieldsset="fieldsset" pg="pg" :selectentry="selectentry">
+				<span style="font-weight:bold;" slot="header">
+					<span>Select Categories</span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="pg" :sorting="parameterApp.sorting" :fieldsset="fieldsset" :dataset="categories"  @on-select-row="selectentry"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>
+		<!-- / Question categories select dialog -->
+		
+		<!-- ============================== Question questionnaires ============================== -->
+		<!-- Delete questionnaire button -->
+        <script type="text/x-template" id="delete-question-questionnaire-template">
+            <td class="col-md-1">
+				<button class="btn btn-danger" @click="onDeleteEntry"><i class="fa fa-close"></i></button>
+			</td>
+        </script>
+		<!-- / Delete questionnaire button -->
+        
+        <!-- Edit question questionnaires dialog -->
+	    <script type="text/x-template" id="edit-question-questionnaires-dialog-template">
+			<edit-generic-dialog :data="questionnaires" :cancelaction="editQuestionQuestionnairesApp.closeEditDialog" :saveaction="editQuestionQuestionnairesApp.updateEntries">
+				<span style="font-weight:bold;" slot="header">
+					<button type="button" class="btn btn-default" @click="editQuestionQuestionnairesApp.showEiligbleEntries"><i class="fa fa-plus"></i></button>
+					<span class="pull-right" style="padding-right:15px;" th:text="#{parameters.questions.questionnaires}"></span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editQuestionQuestionnairesApp.pg" :fieldsset="editQuestionQuestionnairesApp.fieldsset" :dataset="questionnaires" :gridcomponents="editQuestionQuestionnairesApp.gridcomponents"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>
+		<!-- / Edit question questionnaires dialog -->
+		
+		<!-- Select questionnaire check button -->
+		<script type="text/x-template" id="select-question-eligible-questionnaire-template">
+            <td class="col-md-1">
+				<input type="checkbox" v-model="data.selected" />
+			</td>
+		</script>
+		<!-- / Select questionnaire check button -->
+
+		
+		<!-- Select question eligible questionnaires dialog -->
+		<script type="text/x-template" id="select-question-eligible-questionnaires-dialog-template">
+			<edit-generic-dialog :data="questionnaires" :cancelaction="editQuestionQuestionnairesApp.closeEligibleEntriesDialog" :saveaction="editQuestionQuestionnairesApp.addEntries">
+				<span style="font-weight:bold;" slot="header">
+					<span th:text="#{parameters.questions.selectQuestionnaires}"></span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editQuestionQuestionnairesApp.pg2" :fieldsset="editQuestionQuestionnairesApp.eligibleFieldsset" :dataset="editQuestionQuestionnairesApp.eligibleEntries" :gridcomponents="editQuestionQuestionnairesApp.eligibleGridcomponents"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>
+		<!-- / Select question eligible questionnaires dialog -->
+		<!-- / ============================== / Question questionnaires ============================== -->
+		
+		<!-- ============================== Question same questions ============================== -->
+		
+		<!-- Delete same question button -->
+        <script type="text/x-template" id="delete-question-same-question-template">
+            <td class="col-md-1">
+				<button class="btn btn-danger" @click="onDeleteEntry"><i class="fa fa-close"></i></button>
+			</td>
+        </script>
+		<!-- / Delete same question button -->
+		
+		
+        <!-- Edit question same questions dialog -->
+	    <script type="text/x-template" id="edit-question-same-questions-dialog-template">
+			<edit-generic-dialog :data="questions" :cancelaction="editQuestionSameQuestionsApp.closeEditDialog" :saveaction="editQuestionSameQuestionsApp.updateEntries">
+				<span style="font-weight:bold;" slot="header">
+					<button type="button" class="btn btn-default" @click="editQuestionSameQuestionsApp.showEiligbleEntries"><i class="fa fa-plus"></i></button>
+					<span class="pull-right" style="padding-right:15px;" th:text="#{parameters.questions.sameQuestions}"></span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editQuestionSameQuestionsApp.pg" :fieldsset="editQuestionSameQuestionsApp.fieldsset" :dataset="questions" :gridcomponents="editQuestionSameQuestionsApp.gridcomponents"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>
+		<!-- / Edit question same questions dialog -->
+				
+		<!-- Select question eligible same questions dialog -->
+		<script type="text/x-template" id="select-question-eligible-same-questions-dialog-template">
+			<edit-generic-dialog :data="questions" :cancelaction="editQuestionSameQuestionsApp.closeEligibleEntriesDialog" :saveaction="editQuestionSameQuestionsApp.addEntries">
+				<span style="font-weight:bold;" slot="header">
+					<span th:text="#{parameters.questions.selectQuestions}"></span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editQuestionSameQuestionsApp.pg2" :fieldsset="editQuestionSameQuestionsApp.eligibleFieldsset" :dataset="editQuestionSameQuestionsApp.eligibleEntries" :gridcomponents="editQuestionSameQuestionsApp.eligibleGridcomponents"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>
+		<!-- / Select question eligible same questions dialog -->
+		
+		<!-- Select same question check button -->
+		<script type="text/x-template" id="select-question-eligible-same-question-template">
+            <td class="col-md-1">
+				<input type="checkbox" v-model="data.selected" />
+			</td>
+		</script>
+		<!-- / Select same question check button -->		
+		<!-- ============================== / Question same questions ============================== -->
+		
+		
+		
+		<!-- ============================== Question Faculties ============================== -->
+		
+		<!-- Delete question faculty button -->
+        <script type="text/x-template" id="delete-question-faculty-template">
+            <td class="col-md-1">
+				<button class="btn btn-danger" @click="onDeleteEntry"><i class="fa fa-close"></i></button>
+			</td>
+        </script>
+		<!-- / Delete question faculty button -->	
+			
+        <!-- Edit question faculties dialog -->
+	    <script type="text/x-template" id="edit-question-faculties-dialog-template">
+			<edit-generic-dialog :data="faculties" :cancelaction="editQuestionFacultiesApp.closeEditDialog" :saveaction="editQuestionFacultiesApp.updateEntries">
+				<span style="font-weight:bold;" slot="header">
+					<button type="button" class="btn btn-default" @click="editQuestionFacultiesApp.showEiligbleEntries"><i class="fa fa-plus"></i></button>
+					<span class="pull-right" style="padding-right:15px;">Faculties</span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editQuestionFacultiesApp.pg" :fieldsset="editQuestionFacultiesApp.fieldsset" :dataset="faculties" :gridcomponents="editQuestionFacultiesApp.gridcomponents"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>
+		<!-- /  Edit question faculties dialog -->
+		
+		<!-- Select question eligible faculties dialog -->
+		<script type="text/x-template" id="select-question-eligible-faculties-dialog-template">
+			<edit-generic-dialog :data="faculties" :cancelaction="editQuestionFacultiesApp.closeEligibleEntriesDialog" :saveaction="editQuestionFacultiesApp.addEntries">
+				<span style="font-weight:bold;" slot="header">
+					<span>Select Faculties</span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editQuestionFacultiesApp.pg2" :fieldsset="editQuestionFacultiesApp.eligibleFieldsset" :dataset="editQuestionFacultiesApp.eligibleEntries" :gridcomponents="editQuestionFacultiesApp.eligibleGridcomponents"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>
+		<!-- / Select question eligible faculties dialog -->
+			
+		<!-- Select faculty check button -->
+		<script type="text/x-template" id="select-question-eligible-faculty-template">
+            <td class="col-md-1">
+				<input type="checkbox" v-model="data.selected" />
+			</td>
+		</script>
+		<!-- / Select faculty check button -->		
+			
+		<!-- ============================== / Question Faculties ============================== -->
+		
+    </span>
+
+</body>
+
+</html>

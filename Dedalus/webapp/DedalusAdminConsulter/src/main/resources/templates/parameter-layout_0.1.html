@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+    layout:decorator="layout"
+    >
+
+    <head>
+        <style type="text/css" th:inline="text">
+            .paginator td {
+                padding: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <span id="createValue"><button type="button" class="btn btn-default pull-right" @click="createCategory"><i class="fa fa-plus"></i></button></span> 
+                        <h2><span layout:fragment="parameterTitle"></span></h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <span layout:fragment="parameterContent"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Grid -->
+            <script type="text/x-template" id="grid-row-template">
+                <tr>
+                    <td v-for="(col, index) in row" v-bind:is="getTemplate(index)" :value="col" :data="rawdata"></td>
+                </tr>
+            </script>
+
+            <script type="text/x-template" id="paginator-template">
+                <table style="padding-top:10px; border-spacing: 10px;">
+                    <tr class="paginator">
+                        <td><button class="btn btn-block btn-success" @click="gotoFirstPage"><i class="fa fa-fast-backward"/></button></td>
+                        <td><button class="btn btn-block btn-success" @click="gotoPreviousPage"><i class="fa fa-backward"/></button></td>
+                        <td class="lead">Σελίδα {{currentpage}} από {{pages}}</td>
+                        <td><button class="btn btn-block btn-success" @click="gotoNextPage"><i class="fa fa-forward"/></button></td>
+                        <td><button class="btn btn-block btn-success" @click="gotoLastPage"><i class="fa fa-fast-forward"/></button></td>
+                        <td class="lead">Σύνολο εγγραφών: <span v-model="totalrecordscount">{{totalrecordscount}}</span></td>
+                    </tr>
+                </table>
+            </script>
+
+            <script type="text/x-template" id="grid-template">
+                <span>
+                    <table class="table table-hover">
+                        <thead><tr><th v-for="(field, index) in fieldsset" @click="sort(field)" v-bind:class="getSortClass(field)">{{field.title}}</th></tr></thead>
+                        <tbody v-for="(row, index) in rows">
+                            <grid-row :rawdata="row"></grid-row>
+                        </tbody>
+                    </table>
+                    <span id="paginator"></span>		
+                </span>
+            </script>
+
+            <script type="text/x-template" id="default-template">
+                <td>{{value}}</td>
+            </script>
+            <!-- / Grid -->
+            
+        </div>     
+    </body>
+</html>

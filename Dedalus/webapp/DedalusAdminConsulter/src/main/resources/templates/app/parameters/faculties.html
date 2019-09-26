@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="parameter-layout">
+
+<head>
+    <title>Faculties</title>
+</head>
+
+<body>
+    <span layout:fragment="pageTitle">Faculties</span>
+    <div layout:fragment="parameterTitle" th:text="#{parameters.faculties.title}"></div>
+    <div layout:fragment="parameterContent">
+        <div id="GoesHere">
+            <grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="parameterApp.enablePaging" :pg="parameterApp.pg" :sorting="parameterApp.sorting" :fieldsset="fieldsset" :dataset="parameterApp.dataset" :gridcomponents="gridcomponents" v-if="parameterApp.dataset!=null"></grid>
+            
+			<edit-faculty-dialog v-if="parameterApp.isEditDialogVisible" :faculty="parameterApp.currentParameter" @onclose="parameterApp.closeEditDialog"></edit-faculty-dialog>
+			
+			<edit-faculty-locations-dialog v-if="editFacultyLocationsApp.isEditEntriesVisible" :locations="editFacultyLocationsApp.entries"></edit-faculty-locations-dialog>
+			
+			<edit-faculty-universities-dialog v-if="editFacultyUniversitiesApp.isEditEntriesVisible" :universities="editFacultyUniversitiesApp.entries"></edit-faculty-universities-dialog>
+			
+			<select-faculty-eligible-locations-dialog v-if="editFacultyLocationsApp.isSelectEligibleEntriesVisible" :locations="editFacultyLocationsApp.eligibleEntries"></select-faculty-eligible-locations-dialog>
+			
+			<select-faculty-eligible-universities-dialog v-if="editFacultyUniversitiesApp.isSelectEligibleEntriesVisible" :universities="editFacultyUniversitiesApp.eligibleEntries"></select-faculty-eligible-universities-dialog>
+			
+			<info-dialog v-if="parameterApp.isInfoDialogVisible" :message="currentInfoMessage" @onclose="onInfoDialogClose"></info-dialog>
+
+			<yesno-dialog v-if="parameterApp.isYesNoDialogVisible" :confirmationfunc="parameterApp.deleteParameter" :disagreementfunc="parameterApp.denialParameterDeletion" :cancelfunc="parameterApp.denialParameterDeletion"  :message="parameterApp.questionMessage"></yesno-dialog>
+        </div>        
+    </div>
+
+    <span layout:fragment="page-script">
+        <script type="text/javascript" th:src="@{/js/app/parameters/faculties.js}" ></script>
+    </span>
+    
+    <span layout:fragment="after-content">
+	    <script type="text/x-template" id="edit-faculty-dialog-template">
+			<edit-generic-parameter-dialog :data="faculty" :cancelaction="parameterApp.closeEditDialog" :saveaction="parameterApp.saveParameter">
+				<span style="font-weight:bold;" slot="header"> {{faculty.description}}</span>
+
+				<div class="form-group" slot="fields">
+					<div class="row">
+						<div><label class="control-label col-lg-2">Περιγραφή</label></div>
+						<div class="col-lg-10"><input type="text" v-model="faculty.description" class="form-control" /></div>
+					</div>
+				
+				</div>
+			</edit-generic-parameter-dialog>
+		</script>
+
+        <script type="text/x-template" id="faculty-universities-template">
+            <td class="col-md-1">
+				<button class="btn btn-warning" @click="onEditFacultyUniversities"><i class="fa fa-institution"></i></button>
+			</td>
+        </script>
+		
+        <script type="text/x-template" id="faculty-locations-template">
+            <td class="col-md-1">
+				<button class="btn btn-warning" @click="onEditFacultyLocations"><i class="fa fa-map-o"></i></button>
+			</td>
+        </script>
+
+        <script type="text/x-template" id="delete-faculty-location-template">
+            <td class="col-md-1">
+				<button class="btn btn-danger" @click="onDeleteFacultyLocation"><i class="fa fa-close"></i></button>
+			</td>
+        </script>
+        
+        <script type="text/x-template" id="delete-faculty-university-template">
+            <td class="col-md-1">
+				<button class="btn btn-danger" @click="onDeleteFacultyUniversity"><i class="fa fa-close"></i></button>
+			</td>
+        </script>
+        
+	    <script type="text/x-template" id="edit-faculty-locations-dialog-template">
+			<edit-generic-dialog :data="locations" :cancelaction="editFacultyLocationsApp.closeEditDialog" :saveaction="editFacultyLocationsApp.updateEntries">
+				<span style="font-weight:bold;" slot="header">
+					<button type="button" class="btn btn-default" @click="editFacultyLocationsApp.showEiligbleEntries"><i class="fa fa-plus"></i></button>
+					<span class="pull-right" style="padding-right:15px;">Locations</span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editFacultyLocationsApp.pg" :fieldsset="editFacultyLocationsApp.fieldsset" :dataset="locations" :gridcomponents="editFacultyLocationsApp.gridcomponents"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>
+		
+	    <script type="text/x-template" id="edit-faculty-universities-dialog-template">
+			<edit-generic-dialog :data="universities" :cancelaction="editFacultyUniversitiesApp.closeEditDialog" :saveaction="editFacultyUniversitiesApp.updateEntries">
+				<span style="font-weight:bold;" slot="header">
+					<button type="button" class="btn btn-default" @click="editFacultyUniversitiesApp.showEiligbleEntries"><i class="fa fa-plus"></i></button>
+					<span class="pull-right" style="padding-right:15px;">Universities</span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editFacultyUniversitiesApp.pg" :fieldsset="editFacultyUniversitiesApp.fieldsset" :dataset="universities" :gridcomponents="editFacultyUniversitiesApp.gridcomponents"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>		
+
+		<script type="text/x-template" id="select-faculty-eligible-university-template">
+            <td class="col-md-1">
+				<input type="checkbox" v-model="data.selected" />
+			</td>
+		</script>
+		
+		<script type="text/x-template" id="select-faculty-eligible-location-template">
+            <td class="col-md-1">
+				<input type="checkbox" v-model="data.selected" v-on:change="onSelectEligibleLocation" />
+			</td>
+		</script>
+
+		<script type="text/x-template" id="select-faculty-eligible-locations-dialog-template">
+			<edit-generic-dialog :data="locations" :cancelaction="editFacultyLocationsApp.closeEligibleEntriesDialog" :saveaction="editFacultyLocationsApp.addEntries">
+				<span style="font-weight:bold;" slot="header">
+					<span>Select Locations</span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editFacultyLocationsApp.pg2" :fieldsset="editFacultyLocationsApp.eligibleFieldsset" :dataset="locations" :gridcomponents="editFacultyLocationsApp.eligibleGridcomponents" @on-select-row="editFacultyLocationsApp.selectLocation"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>
+		
+		<script type="text/x-template" id="select-faculty-eligible-universities-dialog-template">
+			<edit-generic-dialog :data="universities" :cancelaction="editFacultyUniversitiesApp.closeEligibleEntriesDialog" :saveaction="editFacultyUniversitiesApp.addEntries">
+				<span style="font-weight:bold;" slot="header">
+					<span>Select Universities</span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editFacultyUniversitiesApp.pg2" :fieldsset="editFacultyUniversitiesApp.eligibleFieldsset" :dataset="universities" :gridcomponents="editFacultyUniversitiesApp.eligibleGridcomponents" @on-select-row="editFacultyUniversitiesApp.selectLocation"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>		
+    </span>
+
+</body>
+
+</html>

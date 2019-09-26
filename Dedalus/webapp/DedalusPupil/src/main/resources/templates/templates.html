@@ -1,0 +1,218 @@
+<!-- ====================================================== Questions ======================================================================= -->
+
+<!-- Wizard Steps -->
+	<!-- Steps Template -->
+	<ul>
+		<li id="stepsTemplate"><span id="stepNo"></span></li>
+	</ul>
+	<!-- / Steps  Template -->
+
+	<!-- Enabled Step -->
+	
+	<ul id="enabledStepTemplate1">
+		<li><a href="#step-{stepNo}"><span class="step_no" id="stepNo"></span><span class="step_descr">Βήμα {stepNo}</span></a></li>
+	</ul>
+	
+	
+	
+	<a id="enabledStepTemplate" href="#"><span class="step_no" id="stepNo1"></span><span class="step_descr">Βήμα <span id="stepNo2"></span></span></a>
+	
+	
+	<!-- / Enabled Step -->
+	
+	
+	
+	<!-- Disabled Step -->
+	
+	<ul id="disabledStepTemplate1">
+		<li><a href="#step-{stepNo}" class="disabled"><span class="step_no" id="stepNo"></span><span class="step_descr">Βήμα {stepNo}</span></a></li>
+	</ul>
+	
+	<a id="disabledStepTemplate" href="#" class="disabled"><span class="step_no" id="stepNo1"></span><span class="step_descr">Βήμα <span id="stepNo2"></span></span></a>
+	
+	<!-- Disabled Step -->
+	
+<!-- / Wizard Steps -->
+
+
+<!-- Question -->
+
+<div id="questionTemplate">
+	<hr />
+	
+	<div class="row">
+		<div class="col-md-12">
+		<h2>
+			<span style="font-weight: bold;"><span id="number"></span>. </span> <span id="question.description"></span>
+		</h2>
+		</div>
+	</div>
+	
+	<div class="row" id="value">
+		<div class="col-md-2"><h5><input type="radio" name="answear_{question.number}" value="0" id="value_{question.number}_0" /> <label for="value_{question.number}_0"> Όχι </label></h5></div>
+		<div class="col-md-2"><h5><input type="radio" name="answear_{question.number}" value="1" id="value_{question.number}_1" /> <label for="value_{question.number}_1"> μάλλον Όχι </label></h5></div>
+		<div class="col-md-2"><h5><input type="radio" name="answear_{question.number}" value="2" id="value_{question.number}_2" /> <label for="value_{question.number}_2"> Δεν ξέρω </label></h5></div>
+		<div class="col-md-2"><h5><input type="radio" name="answear_{question.number}" value="3" id="value_{question.number}_3" /> <label for="value_{question.number}_3"> μάλλον Ναι </label></h5></div>
+		<div class="col-md-2"><h5><input type="radio" name="answear_{question.number}" value="4" id="value_{question.number}_4" /> <label for="value_{question.number}_4"> Ναι </label></h5></div>
+	</div>
+	
+</div>
+
+<!-- / Question -->
+
+
+<div id="valueTemplate">
+	<div class="row" id="value">
+		<div class="col-md-2"><h5><input type="radio" name="answear_{question.number}" value="0" id="value_{question.number}_0" /> <label for="value_{question.number}_0"> Όχι </label></h5></div>
+		<div class="col-md-2"><h5><input type="radio" name="answear_{question.number}" value="1" id="value_{question.number}_1" /> <label for="value_{question.number}_1"> μάλλον Όχι </label></h5></div>
+		<div class="col-md-2"><h5><input type="radio" name="answear_{question.number}" value="2" id="value_{question.number}_2" /> <label for="value_{question.number}_2"> Δεν ξέρω </label></h5></div>
+		<div class="col-md-2"><h5><input type="radio" name="answear_{question.number}" value="3" id="value_{question.number}_3" /> <label for="value_{question.number}_3"> μάλλον Ναι </label></h5></div>
+		<div class="col-md-2"><h5><input type="radio" name="answear_{question.number}" value="4" id="value_{question.number}_4" /> <label for="value_{question.number}_4"> Ναι </label></h5></div>
+	</div>
+</div>
+
+
+<!-- ===================================================== / Questions ====================================================================== -->
+
+
+
+<!-- ======================================================= Results ======================================================================== -->
+
+<!-- Hollands (Version 1) -->
+<div id="hollandTemplates1">
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="x_panel tile fixed_height_350">
+			<h2></h2>
+			<div class="clearfix"></div>
+                     
+			<div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
+				<div class="left"></div>
+				<div class="right">
+					<span class="count_top"><i class="fa fa-gears"></i> Πρακτικός - Ρεαλιστικός</span>
+					<div class="count">${questionnaireResults.holland1}%</div>
+					<span class="count_top">(Realistic)</span>
+				</div>
+			</div>
+                      
+            <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
+                <div class="left"></div>
+                <div class="right">
+                    <span class="count_top"><i class="fa fa-user-secret"></i> Ερευνητικός</span>
+                    <div class="count">${questionnaireResults.holland2}%</div>
+                    <span class="count_top">(Investigative)</span>
+                </div>
+            </div>
+                      
+			<div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
+				<div class="left"></div>
+				<div class="right">
+					<span class="count_top"><i class="fa fa-paint-brush"></i> Καλλιτεχνικός</span>
+					<div class="count">${questionnaireResults.holland3}%</div>
+					<span class="count_top">(Artistic)</span>
+				</div>
+			</div>
+                            
+			<div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
+				<div class="left"></div>
+				<div class="right">
+					<span class="count_top"><i class="fa fa-users"></i> Κοινωνικός</span>
+					<div class="count">${questionnaireResults.holland4}%</div>
+					<span class="count_top">(Social)</span>
+				</div>
+			</div>
+                     
+			<div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
+				<div class="left"></div>
+				<div class="right">
+					<span class="count_top"><i class="fa fa-industry"></i> Επιχειρηματικός</span>
+					<div class="count">${questionnaireResults.holland5}%</div>
+					<span class="count_top">(Enterprising)</span>
+				</div>
+			</div>
+
+			<div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
+				<div class="left"></div>
+				<div class="right">
+					<span class="count_top"><i class="fa fa-folder"></i> Συμβατικός - Οργανωτικός</span>
+					<div class="count">${questionnaireResults.holland6}%</div>
+					<span class="count_top">(Conventional)</span>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+<!-- / Hollands (Version 1) -->
+
+
+<!-- Hollands -->
+<div id="hollandTemplate" class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
+	<div class="left"></div>
+		<div class="right">
+    		<span class="count_top"><i id="cssClass"></i> <span id="subject.description"></span></span>
+    		<div class="count"><span id="percentageFormated"></span>%</div>
+    		<span class="count_top">(<span id="descriptionEN"></span>)</span>
+		</div>
+</div>
+<!-- / Hollands -->
+
+
+<!-- Hollands (Analytical) -->
+<div id="hollandAnalyticalTemplate" class="widget_summary">
+    <div class="w_left w_25">
+        <span><span id="subject.description"></span> (<span id="descriptionEN"></span>)</span>
+    </div>
+    <div class="w_center w_55">
+        <div class="progress">
+            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {percentageFormated}%;">
+                <span class="sr-only">{percentageFormated}% Complete</span>
+            </div>
+        </div>
+    </div>
+    <div class="w_right w_20">
+        <span>{percentageFormated}%</span>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<!-- / Hollands (Analytical) -->
+
+<!-- Top Categories for Chart -->
+<div class="col-md-3 col-sm-3 col-xs-12 widget_tally_box" id="topCategoryForChartTemplate">
+    <div class="x_panel ui-ribbon-container fixed_height_390">
+        <div class="x_title">
+            <h2 id="subject.description"></h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li><a href="#"></a></li>
+                <li><a href="#"></a></li>
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+            </ul>
+
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div style="text-align: center; margin-bottom: 17px">
+                <span class="chart" data-percent="17.5">
+        			<span class="percent">{percentageFormated}</span>
+                </span>
+            </div>
+
+            <h3 class="name_title"></h3>
+            <p></p>
+
+            <div class="divider"></div>
+
+            <p></p>
+
+        </div>
+    </div>
+</div>
+<!-- / Top Categories for Chart -->
+
+
+<table>
+	<tr id="listTemplate"><th scope="row" id="rowNumber"></th><td>{subject.description}</td><td>{percentageFormated}%</td></tr>
+</table>
+
+
+<!-- ====================================================== / Results ======================================================================= -->

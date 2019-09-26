@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+	<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+  <head>
+    <title></title>
+    
+    <link rel="stylesheet" th:href="@{/layout-templates/gentella/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/layout-templates/gentella/fonts/css/font-awesome.min.css}" />
+    <link rel="stylesheet" th:href="@{/layout-templates/gentella/css/animate.min.css}" />
+    <link rel="stylesheet" th:href="@{/layout-templates/gentella/css/custom.css}" />
+    <link rel="stylesheet" th:href="@{/layout-templates/gentella/css/icheck/flat/green.css}" />
+
+    <script th:src="@{/layout-templates/gentella/js/jquery.min.js}"></script>
+    
+	<script type="text/javascript" th:inline="text">
+		const contextPath = "[[@{/}]]";
+	</script>
+
+    <style type="text/css" th:inline="text">
+		.sortable {
+			cursor: default;
+			background: url([[@{/images/sort_both.png}]]) no-repeat center right;
+		}
+      
+		.sortasc {
+			background: url([[@{/images/sort_asc.png}]]) no-repeat center right;
+		}
+
+		.sortdesc {
+			background: url([[@{/images/sort_desc.png}]]) no-repeat center right;
+		}
+		
+		.selectedRow {
+			background-color: #fcfcfc;
+		}
+		
+		.errorText {
+			color: red!important;
+		}
+    </style>
+
+	<script type="text/javascript" th:src="@{/js/vue/2.5.9/vue.min.js}" ></script>
+	<script type="text/javascript" th:src="@{/js/axios/0.18.0/axios.min.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/vue/i18n/vue-i18n.min.js}" ></script>
+      
+	<script type="text/javascript" th:src="@{/js/lib/pubSub.js}" ></script>
+	<script type="text/javascript" th:src="@{/js/lib/grid.js}" ></script>
+	<script type="text/javascript" th:src="@{/js/lib/validator.js}" ></script>
+	<script type="text/javascript" th:src="@{/js/lib/dialog.js}" ></script>
+    <script type="text/javascript" th:src="@{/js/lib/default.js}" ></script>
+    
+	<script type="text/javascript">
+	/*
+	 ----------
+	 -- i18n --
+	 ----------
+	*/ 
+
+	Vue.use(VueI18n);
+
+	const i18n = new VueI18n({
+		locale: '[[${locale}]]',
+		messages: {
+			'[[${locale}]]':{
+				validation:{
+					field: {
+						mandatory: '[[#{validation.field.mandatory}]]'
+					}
+				},
+				parameters:{
+					description : '[[#{parameters.description}]]',
+					edit: '[[#{parameters.edit}]]',
+					delete: '[[#{parameters.delete}]]'/*,
+					categories: {
+						delete: '[[#{parameters.categories.delete}]]'
+					}*/
+				},
+				parameters2:{
+					dd: 'DDDD'
+				}
+			}
+		}
+	});
+	
+	</script>    
+  </head>
+  
+  <body class="nav-md">
+      <div class="container body">
+        <div class="main_container">
+
+          <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+              <div class="navbar nav_title" style="border: 0;">
+                <a th:href="@{/}" class="site_title"><i class="fa fa-home"></i> <span></span></a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <br />
+				
+              <!-- Sidebar menu -->
+              <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              
+              	<!-- Data -->
+				<div class="menu_section">
+					<h3 th:text="#{menu.management}"></h3>
+					<ul class="nav side-menu">
+						<li><a><i class="fa fa-cogs"></i> <span th:text="#{menu.parameters}"></span> <span class="fa fa-chevron-down"></span></a>
+							<ul class="nav child_menu" style="display: none">
+								<li><a th:href="@{/app/parameters/categories}" th:text="#{menu.categories}"></a></li>
+								<li style="display: none;"><a th:href="@{/app/parameters/faculties}" th:text="#{menu.faculties}"></a></li>
+								<li style="display: none;"><a th:href="@{/app/parameters/universities}" th:text="#{menu.universities}"></a></li>
+								<li style="display: none;"><a th:href="@{/app/parameters/locations}" th:text="#{menu.locations}"></a></li>
+								<li><a th:href="@{/app/parameters/scientificfields}" th:text="#{menu.scientificfields}"></a></li>
+								<li><a th:href="@{/app/parameters/hollands}" th:text="#{menu.hollands}"></a></li>
+							</ul>
+						</li>
+						<li><a><i class="fa fa-check-square-o"></i> <span th:text="#{menu.questionnaires}"></span> <span class="fa fa-chevron-down"></span></a>
+							<ul class="nav child_menu" style="display: none">
+								<li><a th:href="@{/app/parameters/questionnaires}" th:text="#{menu.questionnaires}"></a></li>
+								<li><a th:href="@{/app/parameters/questions}" th:text="#{menu.questions}"></a></li>
+							</ul>
+						</li>
+						<li><a><i class="fa fa-cubes"></i> <span th:text="#{menu.tuitionCentres}"></span> <span class="fa fa-chevron-down"></span></a>
+							<ul class="nav child_menu" style="display: none">
+								<li><a th:href="@{/app/tuitionCentres/tuitionCentres}" th:text="#{menu.management}"></a></li>
+							</ul>
+						</li>
+						
+					</ul>
+				</div>
+				<!-- / Data -->
+				
+				
+				<!-- Tuition Centers -->
+				<div class="menu_section" style="display: none;">
+					<h3 th:text="#{menu.management}"></h3>
+					<ul class="nav side-menu">
+						<li><a><i class="fa fa-home"></i> <span th:text="#{menu.tuitionCentres}"></span> <span class="fa fa-chevron-down"></span></a>
+							<ul class="nav child_menu" style="display: none">
+								<li><a th:href="@{/app/tuitionCentres/tuitionCentres}" th:text="#{menu.management}"></a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="nav side-menu" style="display: none;">
+						<li><a><i class="fa fa-home"></i> Κουπόνια <span class="fa fa-chevron-down"></span></a>
+							<ul class="nav child_menu" style="display: none">
+								<li><a th:href="@{/}">Διαχείριση</a></li>
+								<li><a th:href="@{/}">Ανάθεση</a></li>
+							</ul>
+						</li>
+					</ul>
+					
+				</div>
+				<!-- / Tuition Centers -->
+				
+              </div>
+              <!-- Sidebar menu -->
+              
+            <!-- menu footer buttons -->
+            <div class="sidebar-footer hidden-small">
+
+            </div>
+            <!-- / menu footer buttons -->  
+              
+            </div>
+          </div>
+
+          <!-- top navigation -->
+          <div class="top_nav">
+            <div class="nav_menu">
+              <nav class="" role="navigation">
+                <div class="nav toggle">
+                    <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                </div>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                      <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                          <img src="#" alt=""><span id="currentUser"><i class="fa fa-user"></i> <span v-if="fullName!=null">{{fullName}}</span></span>
+                          <span class=" fa fa-angle-down"></span>
+                      </a>
+                      <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
+						<li><a th:href="@{/logout}"><i class="fa fa-sign-out pull-right"></i><span th:text="#{layout.logOut}"></span></a></li>
+                      </ul>
+                  </li>
+                  
+                </ul>                
+                
+              </nav>
+            </div>
+          </div>
+          <!-- / top navigation -->
+          
+          <!-- page content -->
+            <div class="right_col" role="main">
+
+              <div class="page-title">
+                <div class="title_left">
+                  <h3 style="display: none;">
+                    <span layout:fragment="pageTitle"></span>
+                  </h3>
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+				
+              <div class="row">
+                <span layout:fragment="content">
+                  Page content
+                </span>
+
+              </div>
+
+            </div>
+          <!-- page content -->
+
+        </div>
+      </div>
+
+	<!-- I18n -->
+		
+	  <script type="text/x-template" id="yesno-dialog-template">
+		<div class="modal show">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" @click="cancelfunc()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title"><i class="fa fa-question-circle" /> {{message.title}}</h4>
+					</div>
+
+					<div class="modal-body">
+						{{message.text}}
+					</div>
+							
+					<div class="modal-footer" style="text-align:center; border red 1px solid">
+						<button type="button" class="btn btn-primary" @click="confirmationfunc()">[[#{global.yes}]]</button>
+                        <button type="button" class="btn btn-warning" @click="disagreementfunc()">[[#{global.no}]]</button>
+						<button type="button" class="btn btn-default pull-right" @click="cancelfunc()">[[#{global.cancel}]]</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
+	
+	<script type="text/x-template" id="edit-generic-dialog-template">
+		<div class="modal show">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" @click="cancel" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">
+								<slot name="header"></slot>
+							</h4>
+							</div>
+							<div class="modal-body">
+								<slot name="data"></slot>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary pull-left" @click="save"><i class="fa fa-check"></i></button>
+	                			<button type="button" class="btn btn-default" @click="cancel"><i class="fa fa-sign-out"></i></button>
+	              			</div>
+	            		</div>
+					</div>
+	        	</div>
+			</script>
+	
+	
+			<script th:src="@{/layout-templates/gentella/js/bootstrap.min.js}"></script>
+			<script th:src="@{/layout-templates/gentella/js/chartjs/chart.min.js}"></script>
+			<script th:src="@{/layout-templates/gentella/js/progressbar/bootstrap-progressbar.min.js}"></script>
+			<script th:src="@{/layout-templates/gentella/js/nicescroll/jquery.nicescroll.min.js}"></script>
+			<script th:src="@{/layout-templates/gentella/js/icheck/icheck.min.js}"></script>
+			<script th:src="@{/layout-templates/gentella/js/custom.js}"></script>
+
+      <span layout:fragment="after-content"></span>
+      <span layout:fragment="page-script"></span>
+      
+      <script type="text/javascript" th:src="@{/js/app/layout.js}" ></script>
+  </body>
+</html>

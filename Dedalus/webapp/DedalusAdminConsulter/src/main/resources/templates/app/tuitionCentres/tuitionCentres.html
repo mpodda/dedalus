@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="parameter-layout">
+
+<head>
+    <title th:text="#{parameters.tuitionCentres.title}"></title>
+    
+    <style type="text/css" th:inline="text">
+    		.modal-content {
+				width: 165%!important;
+			}
+			
+			.modal-dialog {
+				margin-top: 0px!important;
+				margin-left: 10%!important;
+			}
+			
+			hr {
+				margin:12px!important;
+			}
+	</style>
+    
+</head>
+
+<body>
+    <span layout:fragment="pageTitle" th:text="#{parameters.tuitionCentres.title}"></span>
+    <div layout:fragment="parameterTitle" th:text="#{parameters.tuitionCentres.title}"></div>
+    <div layout:fragment="parameterContent">
+        <div id="GoesHere">
+            <grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="parameterApp.enablePaging" :pg="parameterApp.pg" :sorting="parameterApp.sorting" :fieldsset="fieldsset" :dataset="parameterApp.dataset" :gridcomponents="gridcomponents" :renderers="renderers" v-if="parameterApp.dataset!=null"></grid>
+            
+<!--             <tuition-centre-grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="parameterApp.enablePaging" :pg="parameterApp.pg" :sorting="parameterApp.sorting" :fieldsset="fieldsset" :dataset="parameterApp.dataset" :gridcomponents="gridcomponents" :renderers="renderers" v-if="parameterApp.dataset!=null"></tuition-centre-grid> -->
+            
+			<edit-tuition-centre-dialog v-if="parameterApp.isEditDialogVisible" :tc="parameterApp.currentParameter" @onclose="parameterApp.closeEditDialog"></edit-tuition-centre-dialog>
+			
+			<add-tuition-centre-tokens-dialog v-if="tcTokenBatchApp.isEditDialogVisible" :batch="tcTokenBatchApp.currentParameter" @onclose="tcTokenBatchApp.closeEditDialog"></add-tuition-centre-tokens-dialog>
+			
+			<select-token-questionnaire-dialog v-if="editTokenBatchQuestionnaireApp.isSelectEntryVisible" :questionnaires="editTokenBatchQuestionnaireApp.eligibleEntries" :saveaction="editTokenBatchQuestionnaireApp.closeSelectEntryDialog" :cancelaction="editTokenBatchQuestionnaireApp.closeSelectEntryDialog" :fieldsset="editTokenBatchQuestionnaireApp.fieldsset" :pg="editTokenBatchQuestionnaireApp.pg" :selectentry="editTokenBatchQuestionnaireApp.selectEntry"></select-token-questionnaire-dialog>
+
+			<edit-tuition-centre-tokens-dialog v-if="editTokensApp.isEditDialogVisible" :criteria="editTokensApp.currentParameter" @onclose="editTokensApp.closeEditDialog"></edit-tuition-centre-tokens-dialog>
+			
+			<info-dialog v-if="parameterApp.isInfoDialogVisible" :message="currentInfoMessage" @onclose="onInfoDialogClose"></info-dialog>
+
+			<yesno-dialog v-if="parameterApp.isYesNoDialogVisible" :confirmationfunc="parameterApp.deleteParameter" :disagreementfunc="parameterApp.denialParameterDeletion" :cancelfunc="parameterApp.denialParameterDeletion"  :message="parameterApp.questionMessage"></yesno-dialog>
+			
+			<tuition-centre-commands></tuition-centre-commands>
+			
+        </div>        
+    </div>
+
+    <span layout:fragment="page-script">
+    	<script type="text/javascript" th:src="@{/js/moment/moment.min.js}" ></script>
+        <script type="text/javascript" th:src="@{/js/app/tuitionCentres/tuitionCentres.js}" ></script>
+    </span>
+    
+    <span layout:fragment="after-content">
+    	<script type="text/x-template" id="active-tuition-centre-template">
+			<td class="col-md-1" style="text-align:center;">
+				<i class="fa fa-circle" style="color:#0000ff" />
+			</td>
+		</script>
+
+    	<script type="text/x-template" id="not-active-tuition-centre-template">
+			<td class="col-md-1" style="text-align:center;">
+				<i class="fa fa-circle" style="color:#ff0000" />
+			</td>
+		</script>
+		
+	    <script type="text/x-template" id="edit-tuition-centre-dialog-template">
+			<edit-generic-parameter-dialog :data="tc" :cancelaction="parameterApp.closeEditDialog" :saveaction="parameterApp.saveParameter">
+				<span style="font-weight:bold;" slot="header"> {{tc.description}}</span>
+
+				<div slot="fields">
+					<div class="form-group">
+						<div class="row">
+							<div><label class="col-md-2" th:text="#{parameters.tuitionCentres.name}"></label></div>
+							<div class="col-md-8"><input type="text" ref="description" v-model="tc.description" class="form-control" /></div>
+						</div>
+						<div class="row">
+							<div class="col-xs-2"></div>
+							<div class="col-xs-8 errorText" ref="descriptionError"></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div><label class="col-md-2" th:text="#{parameters.tuitionCentres.address}"></label></div>
+							<div class="col-md-8"><input type="text" ref="address" v-model="tc.address" class="form-control" /></div>
+						</div>
+						<div class="row">
+							<div class="col-xs-2"></div>
+							<div class="col-xs-8 errorText" ref="addressError"></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div><label class="col-md-2" th:text="#{parameters.tuitionCentres.userName}"></label></div>
+							<div class="col-md-6"><input :readonly="isEditMode" type="text" ref="userName" v-model="tc.userName" class="form-control" /></div>
+						</div>
+						<div class="row">
+							<div class="col-xs-2"></div>
+							<div class="col-xs-8 errorText" ref="userNameError"></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div><label class="col-md-2" th:text="#{parameters.tuitionCentres.password}"></label></div>
+							<div class="col-md-6"><input type="text" ref="password" v-model="tc.password" class="form-control" /></div>
+						</div>
+						<div class="row">
+							<div class="col-xs-2"></div>
+							<div class="col-xs-8 errorText" ref="passwordError"></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div><label class="col-md-2" th:text="#{parameters.tuitionCentres.isActive}"></label></div>
+							<div class="col-md-6"><input type="checkbox" v-model="tc.active" class="form-control" /></div>
+						</div>
+					</div>
+
+				</div>
+			</edit-generic-parameter-dialog>
+		</script>
+		
+	   	<!-- ======================================= Tokens ===================================== -->
+
+		<!-- Add token button -->
+		<script type="text/x-template" id="manage-token-template">
+            <td class="col-md-2">
+				<button class="btn btn-default" @click="onAddToken"><i class="fa fa-plus"></i> <!-- i class="fa fa-plus" style="position:relative; left:-20%;"></i --> </button>
+				<button class="btn btn-primary" @click="onAEditToken"><i class="fa fa-tags"></i> <!-- i class="fa fa-pencil" style="font-size:15px;position:relative; left:-20%;"></i --> </button>
+			</td>
+        </script>
+		<!-- / Add token button -->
+		
+		<!-- Add tokens dialog -->
+		<script type="text/x-template" id="add-tuition-centre-tokens-dialog-template">
+		<edit-generic-parameter-dialog :data="batch" :cancelaction="tcTokenBatchApp.closeEditDialog" :saveaction="tcTokenBatchApp.saveParameter">
+			<span style="font-weight:bold;" slot="header"> <span th:text="#{parameters.tuitionCentres.tokens.assignment}"></span> {{batch.tuitionCentre.description}} </span>
+			
+			<div class="form-group" slot="fields">
+			
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-2"><label for="amount" class="control-label" th:text="#{parameters.tuitionCentres.tokens.amount}"></label></div>
+						<div class="col-xs-2"><input id="amount" class="form-control" type="text" v-model="batch.amount" ref="batchAmount" /></div>
+						<div class="col-xs-4 errorText" ref="batchAmountError"></div>
+					</div>
+				</div>
+				
+				<div class="form-group" style="display:none;">
+					<div class="row">
+						<div class="col-xs-2"><label for="payed" class="control-label">Πληρωμένα</label></div>
+						<div class="col-xs-2"><input id="payed" class="form-control" type="checkbox" v-model="batch.payed" /></div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-2"><label class="control-label" th:text="#{parameters.tuitionCentres.tokens.questionnaire}"></label></div>
+						<div class="col-xs-5"><div class="form-control" ref="batchQuestionnaire"><span v-if="batch.questionnaire != null">{{batch.questionnaire.description}}</span></div></div>
+						<div class="col-xs-1"><button class="btn btn-primary" @click="editTokenBatchQuestionnaireApp.showEntries(batch)"><i class="fa fa-edit"></i></button></div>
+						<div class="col-xs-1"><button class="btn btn-danger" @click="editTokenBatchQuestionnaireApp.removeEntry"><i class="fa fa-close"></i></button></div>
+						<div class="col-xs-4 errorText" ref="batchQuestionnaireError"></div>
+					</div>
+				</div>
+				
+			</div>
+		</edit-generic-parameter-dialog>
+		
+		</script>
+		<!-- / Add tokens dialog -->
+		
+		<!-- Payed Token renderer -->
+    	<script type="text/x-template" id="payed-token-template">
+			<td class="col-md-2" style="text-align:center;">
+				<i class="fa fa-square" style="color:#1479b8; font-size:18px;" />
+			</td>
+		</script>
+		<!-- / Payed Token renderer -->
+		
+		<!-- Not payed Token renderer -->
+    	<script type="text/x-template" id="not-payed-token-template">
+			<td class="col-md-2" style="text-align:center;">
+				<i class="fa fa-square" style="color:#d43f3a; font-size:18px;" />
+			</td>
+		</script>
+		<!-- / Not payed Token renderer -->		
+		
+		<!-- Select Token renderer -->
+		<script type="text/x-template" id="select-token-template">
+            <td class="col-md-1">
+				<input type="checkbox" v-model="data.selected" />
+			</td>
+		</script>
+		<!-- / Select Token renderer -->
+
+		<!-- Search Tokens grid (advanced with command buttons)  -->
+		<script type="text/x-template" id="search-tokens-grid-template">
+    	<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editTokensApp.paging" :sorting="parameterApp.sorting" :fieldsset="editTokensApp.fieldsset" :renderers="editTokensApp.renderers" :dataset="editTokensApp.tokens" :gridcomponents="editTokensApp.gridcomponents">
+			<div slot="commands" style="display:none;">
+				<button title="Πληρώθηκαν" @click="markAsPayed" class="btn btn-round btn-default"><i class="fa fa-money" style="color:#1479b8; font-size:18px;"></i></button>
+				<button title="Δεν πληρώθηκαν" @click="markAsNotPayed" class="btn btn-round btn-default"><i class="fa fa-money" style="color:#d43f3a; font-size:18px;"></i></button>
+				<button title="Επιλογή πληρωμένων" @click="selectPayedTokens" class="btn btn-round btn-default"><i class="fa fa-check-square-o" style="color:#1479b8; font-size:18px;" /></button>
+				<button title="Επιλογή μη πληρωμένων" @click="selectNotPayedTokens" class="btn btn-round btn-default"><i class="fa fa-check-square-o" style="color:#d43f3a; font-size:18px;" /></button>
+				<button title="Επιλογή όλων" @click="selectAllTokens" class="btn btn-round btn-default"><i class="fa fa-check-square-o" style="font-size:18px;" /></button>
+			</div>
+		</grid> 
+    	</script>
+    	<!-- / Search Tokens grid (advanced with command buttons)  -->
+    		
+		<!-- Edit tokens dialog -->
+		<script type="text/x-template" id="edit-tuition-centre-tokens-dialog-template">
+			<edit-generic-parameter-dialog :viewonly="true" :data="criteria" :cancelaction="editTokensApp.closeEditDialog" :saveaction="editTokensApp.saveParameter">
+				<span style="font-weight:bold;" slot="header"> <span th:text="#{parameters.tuitionCentres.tokens.management}"></span>  "{{criteria.tuitionCentre.description}}" </span>
+				
+				<div class="form-group" slot="fields">
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-2"><label for="creationDateFrom" class="control-label" th:text="#{parameters.tuitionCentres.tokens.search.dateFrom}"></label></div>
+							<div class="col-xs-3">
+								<input id="creationDateFrom" class="form-control" type="text" v-model="criteria.creationDateFromAsString" data-inputmask="'mask': '99/99/9999'" />
+								<span class="fa fa-calendar-o form-control-feedback right" aria-hidden="true"></span>
+							</div>
+
+							<div class="col-xs-2"><label for="creationDateTo" class="control-label" th:text="#{parameters.tuitionCentres.tokens.search.dateTo}"></label></div>
+							<div class="col-xs-3">
+								<input id="creationDateTo" class="form-control" type="text" v-model="criteria.creationDateToAsString" data-inputmask="'mask': '99/99/9999'" />
+								<span class="fa fa-calendar-o form-control-feedback right" aria-hidden="true"></span>
+							</div>
+							<div class="col-xs-2">
+								<button class="btn btn-primary" @click="editTokensApp.search"><i class="fa fa-search"></i></button>							
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-10 errorText" ref="dateIntervalError"></div>
+						</div>
+					</div>
+					<div class="form-group" style="display:none;">
+						<div class="row">
+							<div class="col-xs-2"><label class="control-label">Κατάσταση πληρωμής:</label></div>
+							<div class="col-xs-3">
+                            	<label>Πληρωμένα <input type="radio" class="flat" name="paymentStatus" v-model="criteria.payed" value="true"></label>
+                            </div>
+							<div class="col-xs-2">
+                            	<label>Απλήρωτα <input type="radio" class="flat" name="paymentStatus" v-model="criteria.payed" value="false"></label>
+                            </div>
+							<div class="col-xs-3">
+                            	<label>Όλα <input type="radio" class="flat" name="paymentStatus" v-model="criteria.payed" value="null"></label>
+                            </div>
+							<div class="col-xs-2">
+								<button class="btn btn-primary" @click="editTokensApp.search"><i class="fa fa-search"></i></button>							
+							</div>
+						</div>
+					</div>
+					<div class="row" style="padding:10px;">
+						<search-tokens-grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="editTokensApp.paging" :sorting="parameterApp.sorting" :fieldsset="editTokensApp.fieldsset" :renderers="editTokensApp.renderers" :dataset="editTokensApp.tokens" :gridcomponents="editTokensApp.gridcomponents" v-if="editTokensApp.tokens!=null"></search-tokens-grid>
+					</div>
+
+				</div>
+			</edit-generic-parameter-dialog>
+		</script>
+		<!-- / Edit tokens dialog -->
+
+
+		<!--Token Questionnaires select dialog -->
+		<script type="text/x-template" id="select-token-questionnaire-dialog-template">
+			<edit-generic-dialog :data="questionnaires" :cancelaction="cancelaction" :saveaction="saveaction" :fieldsset="fieldsset" pg="pg" :selectentry="selectentry">
+				<span style="font-weight:bold;" slot="header">
+					<span>Select Questionnaire</span>
+				</span>
+
+				<div slot="data">
+					<div class="row" style="padding:10px;">
+						<grid ref="grid" :defaulttemplate="parameterApp.defaultTemplateObject" :pagingenabled="true" :pg="pg" :sorting="parameterApp.sorting" :fieldsset="fieldsset" :dataset="questionnaires" @on-select-row="selectentry"></grid>
+					</div>
+				</div>
+			</edit-generic-dialog>
+		</script>
+		<!-- / Token Questionnaires select dialog -->
+
+		<!-- ===================================== / Tokens ===================================== -->
+		   
+    </span>
+
+</body>
+
+</html>
